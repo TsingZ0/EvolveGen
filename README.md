@@ -46,9 +46,9 @@ While internet content grows under 10% annually, AI datasets double each year. C
 For a COVID-19 pneumonia detection task, generate 100 synthetic images per class based on 10 real and **private chest radiography (X-ray) images** on the edge using the Stable Diffusion API. The edge device utilizes a ResNet-18, with Private Evolution (PE) for rating and feedback provided with privacy protection:
 ```bash  
 python -u main.py \
-  -tt syn \       # Task Type: Use Synthetic Data to Train Small Model
+  -tt syn \       # Task Type: Using synthetic data to train small model
   -tm I2I \       # Task Mode: Image to Image
-  -f Feedback \   # Framework: Feedback Mechanism
+  -f Feedback \   # Framework: Feedback mechanism
   -did 1 \        # GPU device ID
   -eps 5 \        # Privacy budget epsilon
   -rvpl 10 \      # Real volume per label
