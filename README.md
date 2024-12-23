@@ -37,5 +37,5 @@ While internet content grows under 10% annually, AI datasets double each year. C
    - **Available Modalities:**  
      - Image  
    - **Available Raters:**  
-     - Histogram rating in Private Evolution (PE): `--rater PE`  
-     - Real data rating in Real Filter (RF): `--rater RF`  
+     - Histogram rating in [Private Evolution (PE, ICLR'24)](https://openreview.net/forum?id=YEhQs8POIo): `--rater PE`  
+     - Real data rating in [Real Filter (RF, ICLR'23)](https://openreview.net/forum?id=nUmCcZ5RKF): `--rater RF`  
