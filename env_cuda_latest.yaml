@@ -1,0 +1,25 @@
+name: gen
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
+dependencies:
+  - pytorch
+  - torchvision
+  - torchaudio
+  - torchtext
+  - pytorch-cuda=12 # update according to your CUDA
+  - matplotlib
+  - seaborn
+  - scikit-learn
+  - pip
+  - pip:
+    - diffusers
+    - transformers
+    - accelerate
+    - omegaconf
+    - invisible-watermark
+    
+# cd glide-text2im-main
+# pip install -e .
