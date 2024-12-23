@@ -1,5 +1,8 @@
 # EdgeAutoSyn: Cloud-Edge Collaboration Platform for Automated Synthetic Dataset Generation
 
+![Running Out of Data](https://media.nature.com/lw767/magazine-assets/d41586-024-03990-2/d41586-024-03990-2_50306276.jpg?as=webp)
+
+
 AI's growth has relied on scaling neural networks and training on massive datasets, enabling LLMs like ChatGPT to handle conversations and reasoning (see [this nature paper](https://www.nature.com/articles/d41586-023-00641-w)). However, experts warn of limits as energy demands rise and training data dwindles (see [this nature paper](https://www.nature.com/articles/d41586-024-03408-z)). Epoch AI predicts AI training data will be exhausted by 2028 (see [this nature paper](https://www.nature.com/articles/d41586-024-01760-8)).
 
 While internet content grows under 10% annually, AI datasets double each year. Content providers increasingly block web crawlers or restrict data use (see [this paper](https://arxiv.org/abs/2407.14933)). By 2024, blocking tokens on high-quality content rose from 3% in 2023 to 20-33% (see [this nature paper](https://www.nature.com/articles/d41586-024-03990-2)).
@@ -37,3 +40,10 @@ While internet content grows under 10% annually, AI datasets double each year. C
    - **Available Raters (when `--framework Filter or Feedback`):**  
      - Histogram rating in [Private Evolution (PE, ICLR'24)](https://openreview.net/forum?id=YEhQs8POIo): `--rater PE`  
      - Real data rating in [Real Filter (RF, ICLR'23)](https://openreview.net/forum?id=nUmCcZ5RKF): `--rater RF`  
+
+## Example
+
+For a COVID-19 pneumonia detection task, generate 100 synthetic images per class based on 10 real and private chest radiography (X-ray) images on the edge using the Stable Diffusion API. The edge device utilizes a ResNet-18, with Private Evolution (PE) for rating and feedback provided with privacy protection:
+```bash  
+python -u main.py -tt syn -tm I2I -f Feedback -did 1 -ab 1 -T 3 -eps 1 -rvpl 10 -vpl 100 -sgen StableDiffusion -cret 1 -cue ResNet18 -cmodel ResNet18 -cmp 1 -cef 1 -cdata COVIDx -r PE
+```  
