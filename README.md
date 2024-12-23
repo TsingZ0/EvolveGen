@@ -34,6 +34,6 @@ While internet content grows under 10% annually, AI datasets double each year. C
      - Generate with LLM-enhanced prompts: `--framework GenLLM`  
      - Iteratively generate, filter, and accumulate: `--framework Filter`  
      - Iteratively generate, rate, and provide feedback with privacy protection: `--framework Feedback`  
-   - **Available Raters:**  
+   - **Available Raters (when `--framework Filter or Feedback`):**  
      - Histogram rating in [Private Evolution (PE, ICLR'24)](https://openreview.net/forum?id=YEhQs8POIo): `--rater PE`  
      - Real data rating in [Real Filter (RF, ICLR'23)](https://openreview.net/forum?id=nUmCcZ5RKF): `--rater RF`  
