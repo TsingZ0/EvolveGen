@@ -1,4 +1,4 @@
-# EdgeAutoSyn: Cloud-Edge Collaboration Platform for Automated Synthetic Dataset Generation
+# CoAutoGen: Cloud-Edge Collaboration Platform for Automated Synthetic Dataset Generation
 
 ![Running Out of Data](https://media.nature.com/lw767/magazine-assets/d41586-024-03990-2/d41586-024-03990-2_50306276.jpg?as=webp)
 
