@@ -5,9 +5,7 @@
 
 AI's growth has relied on scaling neural networks and training on massive datasets, enabling LLMs like ChatGPT to handle conversations and reasoning (see [this nature paper](https://www.nature.com/articles/d41586-023-00641-w)). However, experts warn of limits as energy demands rise and training data dwindles (see [this nature paper](https://www.nature.com/articles/d41586-024-03408-z)). Epoch AI predicts AI training data will be exhausted by 2028 (see [this nature paper](https://www.nature.com/articles/d41586-024-01760-8)).
 
-While internet content grows under 10% annually, AI datasets double each year. Content providers increasingly block web crawlers or restrict data use (see [this paper](https://arxiv.org/abs/2407.14933)). By 2024, blocking tokens on high-quality content rose from 3% in 2023 to 20-33% (see [this nature paper](https://www.nature.com/articles/d41586-024-03990-2)).
-
-*CoAutoGen enables the creation of synthetic datasets derived from private datasets with differential privacy guarantees or through the use of refined prompts.*
+*CoAutoGen tackles dwindling training dataset by integrating dataset generation methods with cloud-edge collaboration, enabling synthetic dataset creation from refined prompts or privacy-protected private data.*
 
 ## Features  
 
