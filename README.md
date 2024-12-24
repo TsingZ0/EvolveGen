@@ -9,7 +9,6 @@ AI's growth has relied on scaling neural networks and training on massive datase
 
 ## Features  
 
-- Create "dataset twins" for private datasets with differential privacy guarantees.  
 - Intuitive, user-friendly code style.  
 - Customizable rater design for synthetic data rating, selection, and filtering.  
 - Automate synthetic dataset generation with large generative model APIs across various modalities.  
