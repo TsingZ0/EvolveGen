@@ -7,6 +7,8 @@ AI's growth has relied on scaling neural networks and training on massive datase
 
 While internet content grows under 10% annually, AI datasets double each year. Content providers increasingly block web crawlers or restrict data use (see [this paper](https://arxiv.org/abs/2407.14933)). By 2024, blocking tokens on high-quality content rose from 3% in 2023 to 20-33% (see [this nature paper](https://www.nature.com/articles/d41586-024-03990-2)).
 
+*CoAutoGen enables the creation of synthetic datasets derived from private datasets with differential privacy guarantees or through the use of refined prompts.*
+
 ## Features  
 
 - Create "dataset twins" for private datasets with differential privacy guarantees.  
