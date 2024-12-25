@@ -106,7 +106,7 @@ if __name__ == "__main__":
                         help="Used when the test set is not originally split")
     parser.add_argument('-pml', "--prompt_max_length", type=int, default=77)
     parser.add_argument('-f', "--framework", type=str, default="Feedback")
-    parser.add_argument('-r', "--rater", type=str, default="PE")
+    parser.add_argument('-r', "--rater", type=str, default="Other")
     parser.add_argument('-cdata', "--client_dataset", type=str, default="EuroSAT")
     parser.add_argument('-cmodel', "--client_model", type=str, default="ResNet18", 
                         help="CLIP, InceptionV3, ViTs, ResNets")
