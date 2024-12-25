@@ -1,6 +1,6 @@
 # CoAutoGen: Cloud-Edge Collaboration Platform for Automated Synthetic Dataset Generation
 
-*CoAutoGen tackles dwindling training data by integrating dataset generation methods with cloud-edge collaboration, enabling synthetic dataset creation from refined prompts or privacy-protected private data.*
+*CoAutoGen tackles dwindling training data by integrating dataset generation methods with cloud-edge collaboration, enabling **self-correction** in synthetic dataset creation through a **feedback loop** using refined prompts or privacy-protected private data.*
 
 ![Running Out of Data](https://media.nature.com/lw767/magazine-assets/d41586-024-03990-2/d41586-024-03990-2_50306276.jpg?as=webp)
 
@@ -9,6 +9,7 @@ AI's growth has relied on scaling neural networks and training on massive datase
 
 ## Features  
 
+- Enabling self-correction in synthetic dataset creation through feedback with refined prompts or privacy-protected data.
 - Intuitive, user-friendly code style.  
 - Customizable rater design for synthetic data rating, selection, and filtering.  
 - Automate synthetic dataset generation with large generative model APIs across various modalities.  
