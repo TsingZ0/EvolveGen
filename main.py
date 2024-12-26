@@ -93,7 +93,7 @@ if __name__ == "__main__":
     parser.add_argument('-ddir', "--dataset_dir", type=str, default='./dataset', 
                         help="A directory to save dataset")
     parser.add_argument('-iter', "--iterations", type=int, default=100)
-    parser.add_argument('-eps', "--epsilon", type=float, default=5.0, 
+    parser.add_argument('-eps', "--epsilon", type=float, default=0.1, 
                         help="Privacy budget")
     parser.add_argument('-rvpl', "--real_volume_per_label", type=int, default=0)
     parser.add_argument('-ims', "--image_max_size", type=int, default=256)
