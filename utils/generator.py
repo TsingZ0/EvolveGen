@@ -25,7 +25,7 @@ class Text2ImageWrapper(torch.nn.Module):
             )
         elif args.server_generator == 'StableDiffusionXL':
             self.GenPipe = AutoPipelineForText2Image.from_pretrained(
-                'generator/stable-diffusion-xl-refiner-1.0', 
+                'generator/stable-diffusion-xl-base-1.0', 
                 torch_dtype=torch.float16, 
                 device_map='balanced', 
                 local_files_only=True, 
@@ -85,7 +85,7 @@ class Image2ImageWrapper(torch.nn.Module):
                 )
         elif args.server_generator == 'StableDiffusionXL':
             self.GenPipe = AutoPipelineForImage2Image.from_pretrained(
-                'generator/stable-diffusion-xl-refiner-1.0', 
+                'generator/stable-diffusion-xl-base-1.0', 
                 torch_dtype=torch.float16, 
                 device_map='balanced', 
                 local_files_only=True, 
