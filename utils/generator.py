@@ -41,6 +41,7 @@ class Text2ImageWrapper(torch.nn.Module):
             )
         else:
             raise NotImplementedError
+        
         self.GenPipe.set_progress_bar_config(disable=True)
         self.img_size = max(512, args.img_size)
 
@@ -112,6 +113,7 @@ class Image2ImageWrapper(torch.nn.Module):
                 )
         else:
             raise NotImplementedError
+        
         self.GenPipe.set_progress_bar_config(disable=True)
         if args.use_IPAdapter:
             self.GenPipe.set_ip_adapter_scale(args.IPAdapter_scale)
