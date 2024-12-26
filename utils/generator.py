@@ -96,6 +96,20 @@ class Image2ImageWrapper(torch.nn.Module):
                     subfolder="sdxl_models", 
                     weight_name="ip-adapter_sdxl.safetensors"
                 )
+        elif args.server_generator == 'OpenJourney':
+            self.GenPipe = AutoPipelineForImage2Image.from_pretrained(
+                'generator/openjourney', 
+                torch_dtype=torch.float16, 
+                device_map='balanced', 
+                local_files_only=True, 
+                use_safetensors=True,
+            )
+            if args.use_IPAdapter:
+                self.GenPipe.load_ip_adapter(
+                    "generator/IP-Adapter", 
+                    subfolder="models", 
+                    weight_name="ip-adapter_sd15.safetensors"
+                )
         else:
             raise NotImplementedError
         self.GenPipe.set_progress_bar_config(disable=True)
