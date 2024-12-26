@@ -94,7 +94,7 @@ if __name__ == "__main__":
                         help="A directory to save dataset")
     parser.add_argument('-iter', "--iterations", type=int, default=100)
     parser.add_argument('-eps', "--epsilon", type=float, default=0.1, 
-                        help="Privacy budget")
+                        help="Privacy budget per iteration")
     parser.add_argument('-rvpl', "--real_volume_per_label", type=int, default=0)
     parser.add_argument('-ims', "--image_max_size", type=int, default=256)
     parser.add_argument('-vpl', "--volume_per_label", type=int, default=1)
