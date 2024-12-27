@@ -39,6 +39,14 @@ class Text2ImageWrapper(torch.nn.Module):
                 local_files_only=True, 
                 use_safetensors=True,
             )
+        elif args.server_generator == 'FLUX':
+            self.GenPipe = AutoPipelineForText2Image.from_pretrained(
+                'generator/FLUX.1-dev', 
+                torch_dtype=torch.float16, 
+                device_map='balanced', 
+                local_files_only=True, 
+                use_safetensors=True,
+            )
         else:
             raise NotImplementedError
         
@@ -105,12 +113,14 @@ class Image2ImageWrapper(torch.nn.Module):
                 local_files_only=True, 
                 use_safetensors=True,
             )
-            if args.use_IPAdapter:
-                self.GenPipe.load_ip_adapter(
-                    "generator/IP-Adapter", 
-                    subfolder="models", 
-                    weight_name="ip-adapter_sd15.safetensors"
-                )
+        elif args.server_generator == 'FLUX':
+            self.GenPipe = AutoPipelineForImage2Image.from_pretrained(
+                'generator/FLUX.1-dev', 
+                torch_dtype=torch.float16, 
+                device_map='balanced', 
+                local_files_only=True, 
+                use_safetensors=True,
+            )
         else:
             raise NotImplementedError
         
