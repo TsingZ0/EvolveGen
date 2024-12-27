@@ -76,12 +76,21 @@ if __name__ == "__main__":
     # general
     parser.add_argument('-ts', "--timestamp", type=str, default="")
     parser.add_argument('-tt', "--task_type", type=str, default="syn", 
-                        choices=["syn", "mix"])
+                        choices=[
+                            "syn", 
+                            "mix"
+                        ])
     parser.add_argument('-tm', "--task_mode", type=str, default="I2I", 
-                        choices=["T2I", "I2I"])
+                        choices=[
+                            "T2I", 
+                            "I2I"
+                        ])
     parser.add_argument('-ug', "--use_generated", type=bool, default=False)
     parser.add_argument('-dev', "--device", type=str, default="cuda", 
-                        choices=["cpu", "cuda"])
+                        choices=[
+                            "cpu", 
+                            "cuda"
+                        ])
     parser.add_argument('-did', "--device_id", type=str, default="0")
     parser.add_argument('-ab', "--auto_break", type=bool, default=False)
     parser.add_argument('-tc', "--top_count", type=int, default=20, 
@@ -99,14 +108,32 @@ if __name__ == "__main__":
     parser.add_argument('-ims', "--image_max_size", type=int, default=256)
     parser.add_argument('-vpl', "--volume_per_label", type=int, default=1)
     parser.add_argument('-sgen', "--server_generator", type=str, default="StableDiffusion", 
-                        choices=["StableDiffusion", "StableDiffusionXL", "OpenJourney"])
+                        choices=[
+                            "StableDiffusion", 
+                            "StableDiffusionXL", 
+                            "OpenJourney",
+                            "FLUX", 
+                        ])
     parser.add_argument('-nipp', "--num_images_per_prompt", type=int, default=1)
     parser.add_argument('-dn', "--do_norm", type=bool, default=False)
     parser.add_argument('-tr', "--test_ratio", type=float, default=0.2, 
                         help="Used when the test set is not originally split")
     parser.add_argument('-pml', "--prompt_max_length", type=int, default=77)
-    parser.add_argument('-f', "--framework", type=str, default="Gen")
-    parser.add_argument('-r', "--rater", type=str, default="Other")
+    parser.add_argument('-f', "--framework", type=str, default="Gen", 
+                        choices=[
+                            "Real", 
+                            "Gen", 
+                            "GenLLM", 
+                            "Img2Cap", 
+                            "Filter", 
+                            "Feedback"
+                        ])
+    parser.add_argument('-r', "--rater", type=str, default="Other", 
+                        choices=[
+                            "PE", 
+                            "RF", 
+                            "Other"
+                        ])
     parser.add_argument('-cdata', "--client_dataset", type=str, default="EuroSAT")
     parser.add_argument('-cmodel', "--client_model", type=str, default="ResNet18", 
                         help="CLIP, InceptionV3, ViTs, ResNets")
@@ -124,11 +151,20 @@ if __name__ == "__main__":
     parser.add_argument('-ctpl', "--client_topk_per_label", type=int, default=10000)
     # GenLLM
     parser.add_argument('-sllm', "--server_llm", type=str, default="", 
-                        choices=["", "Llama2", "Llama3"])
+                        choices=[
+                            "", 
+                            "Llama2", 
+                            "Llama3"
+                        ])
     # Img2Cap
     parser.add_argument('-cml', "--caption_max_length", type=int, default=70)
     parser.add_argument('-scap', "--server_captioner", type=str, default="", 
-                        choices=["", "BlipBase", "BlipLarge", "LLaVA"])
+                        choices=[
+                            "", 
+                            "BlipBase", 
+                            "BlipLarge", 
+                            "LLaVA"
+                        ])
     # I2I
     parser.add_argument('-is', "--i2i_strength", type=float, default=0.8, 
                         help="[0,1]")
