@@ -50,8 +50,8 @@ class ServerBase(object):
                 label_name = search.group(1)
             else:
                 label_name = ''
-            label_id = self.args.label_names.index(label_name)
-            dataset.append((img_tensor, label_id))
+            label_id = torch.tensor(self.args.label_names.index(label_name))
+            dataset.append((img_tensor.to(self.args.device), label_id.to(self.args.device)))
         print('\nGenerated volume per label: {:.4f}'.format(len(dataset) / self.args.num_labels))
         current_dir = os.path.join(self.train_dataset_dir, f'{self.it}')
         os.makedirs(current_dir)
