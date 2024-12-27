@@ -15,8 +15,10 @@ dependencies:
   - scikit-learn
   - pip
   - openai
+  - sentencepiece
+  - protobuf
+  - diffusers=0.32
   - pip:
-    - diffusers
     - transformers
     - accelerate
     - omegaconf
