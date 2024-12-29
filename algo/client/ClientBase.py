@@ -20,6 +20,7 @@ class ClientBase(object):
         self.it = 0
 
         get_real_data(args)
+        self.eval_loader = self.load_eval_dataset()
         self.current_volume_per_label = [0 for _ in range(args.num_labels)]
         self.done = False
 
@@ -91,12 +92,11 @@ class ClientBase(object):
         
     def eval_metrics(self):
         self.model.eval()
-        eval_loader = self.load_eval_dataset()
 
         trues_per_label = [[] for _ in range(self.args.num_labels)]
         preds_per_label = [[] for _ in range(self.args.num_labels)]
         with torch.no_grad():
-            for x, y in eval_loader:
+            for x, y in self.eval_loader:
                 x = x.to(self.args.device)
                 y = y.to(self.args.device)
                 output = self.model(x)
