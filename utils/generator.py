@@ -44,7 +44,7 @@ class Text2ImageWrapper(torch.nn.Module):
                 'generator/FLUX.1-dev', 
                 torch_dtype=torch.float16, 
                 device_map='balanced', 
-                # max_memory={0:'10GB'}, 
+                max_memory=dict([(int(did), '10GB') for did in args.device_id.split(",")]), 
                 local_files_only=True, 
                 use_safetensors=True,
             )
@@ -127,7 +127,7 @@ class Image2ImageWrapper(torch.nn.Module):
                 'generator/FLUX.1-dev', 
                 torch_dtype=torch.float16, 
                 device_map='balanced', 
-                # max_memory={0:'10GB'}, 
+                max_memory=dict([(int(did), '10GB') for did in args.device_id.split(",")]), 
                 local_files_only=True, 
                 use_safetensors=True,
             )
