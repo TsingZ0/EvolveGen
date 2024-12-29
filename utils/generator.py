@@ -56,13 +56,21 @@ class Text2ImageWrapper(torch.nn.Module):
 
     def __call__(self, prompt, img, negative_prompt):
         with torch.no_grad():
-            res = self.GenPipe(prompt=prompt, 
-                negative_prompt=negative_prompt, 
-                height=self.img_size, 
-                width=self.img_size, 
-                num_images_per_prompt=self.args.num_images_per_prompt, 
-            )
-            if self.args.server_generator == 'StableDiffusionXL':
+            if self.args.server_generator == 'FLUX':
+                res = self.GenPipe(prompt=prompt, 
+                    height=self.img_size, 
+                    width=self.img_size, 
+                    num_images_per_prompt=self.args.num_images_per_prompt, 
+                )
+            else:
+                res = self.GenPipe(prompt=prompt, 
+                    negative_prompt=negative_prompt, 
+                    height=self.img_size, 
+                    width=self.img_size, 
+                    num_images_per_prompt=self.args.num_images_per_prompt, 
+                )
+
+            if self.args.server_generator in ['StableDiffusionXL', 'FLUX']:
                 return res.images
             else:
                 generated_images = []
@@ -137,16 +145,27 @@ class Image2ImageWrapper(torch.nn.Module):
                 image = self.transform(torch.rand(3, self.img_size, self.img_size)).convert("RGB")
             else:
                 image = self.transform(img).resize((self.img_size, self.img_size)).convert("RGB")
-            res = self.GenPipe(prompt=prompt, 
-                image=image, 
-                strength=self.args.i2i_strength if img is not None else 1, 
-                negative_prompt=negative_prompt, 
-                height=self.img_size, 
-                width=self.img_size, 
-                num_images_per_prompt=self.args.num_images_per_prompt, 
-                ip_adapter_image=image if self.args.use_IPAdapter else None, 
-            )
-            if self.args.server_generator == 'StableDiffusionXL':
+
+            if self.args.server_generator == 'FLUX':
+                res = self.GenPipe(prompt=prompt, 
+                    image=image, 
+                    strength=self.args.i2i_strength if img is not None else 1, 
+                    height=self.img_size, 
+                    width=self.img_size, 
+                    num_images_per_prompt=self.args.num_images_per_prompt, 
+                )
+            else:
+                res = self.GenPipe(prompt=prompt, 
+                    image=image, 
+                    strength=self.args.i2i_strength if img is not None else 1, 
+                    negative_prompt=negative_prompt, 
+                    height=self.img_size, 
+                    width=self.img_size, 
+                    num_images_per_prompt=self.args.num_images_per_prompt, 
+                    ip_adapter_image=image if self.args.use_IPAdapter else None, 
+                )
+
+            if self.args.server_generator in ['StableDiffusionXL', 'FLUX']:
                 return res.images
             else:
                 generated_images = []
