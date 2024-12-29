@@ -16,6 +16,5 @@ echo export TMPDIR='$PWD'/tmp >> ~/.bashrc
 
 # Install python packages
 cd $now_path
-conda env create -f env_cuda_latest.yaml
-
 source ~/.bashrc
+conda env create -f env_cuda_latest.yaml
