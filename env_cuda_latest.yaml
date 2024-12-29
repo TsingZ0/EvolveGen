@@ -23,6 +23,10 @@ dependencies:
     - accelerate
     - omegaconf
     - invisible-watermark
+    - torcheval
+    - torcheval-nightly # resolve Intel MKL ERROR
+    - wilds
+    - opacus
     
 # cd glide-text2im-main
 # pip install -e .
