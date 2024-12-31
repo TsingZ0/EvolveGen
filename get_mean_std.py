@@ -1,6 +1,6 @@
 import numpy as np
 
-file_name = input() + '.out'
+file_name = input()
 ll = len('Best test accuracy: ')
 lll = len('Best test accuracy: 0.0000 at iter. ')
 
