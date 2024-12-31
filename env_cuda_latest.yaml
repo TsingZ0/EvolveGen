@@ -18,12 +18,16 @@ dependencies:
   - sentencepiece
   - protobuf
   - diffusers=0.32
-  - numpy
   - pip:
     - transformers
     - accelerate
     - omegaconf
     - invisible-watermark
-    
+    - torcheval
+    - torcheval-nightly # resolve Intel MKL ERROR
+    - wilds
+    - opacus
+    - ujson
+
 # cd glide-text2im-main
 # pip install -e .
