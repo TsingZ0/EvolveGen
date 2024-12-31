@@ -123,3 +123,21 @@ class Client(ClientBase):
             self.done = False
 
         self.train()
+        self.callback()
+
+    def callback(self):
+        train_dataset_dir = os.path.join(self.args.dataset_dir, 'train', self.args.task)
+        train_dataset_path = os.path.join(train_dataset_dir, f'{self.it}/dataset.pt')
+        if os.path.exists(train_dataset_path):
+            os.remove(train_dataset_path)
+            
+        if self.args.client_accumulate_filter:
+            filtered_dataset_dir = os.path.join(self.args.dataset_dir, 'train', self.args.task)
+            filtered_dataset_path = os.path.join(filtered_dataset_dir, f'{self.it-1}/filtered_dataset.pt')
+            if os.path.exists(filtered_dataset_path):
+                os.remove(filtered_dataset_path)
+        else:
+            filtered_dataset_dir = os.path.join(self.args.dataset_dir, 'train', self.args.task)
+            filtered_dataset_path = os.path.join(filtered_dataset_dir, f'{self.it}/filtered_dataset.pt')
+            if os.path.exists(filtered_dataset_path):
+                os.remove(filtered_dataset_path)

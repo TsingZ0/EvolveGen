@@ -360,6 +360,13 @@ class ClientBase(object):
 
     def run(self):
         self.train()
+        self.callback()
+
+    def callback(self):
+        train_dataset_dir = os.path.join(self.args.dataset_dir, 'train', self.args.task)
+        train_dataset_path = os.path.join(train_dataset_dir, f'{self.it}/dataset.pt')
+        if os.path.exists(train_dataset_path):
+            os.remove(train_dataset_path)
 
 # https://github.com/jackfrued/Python-1/blob/master/analysis/compression_analysis/psnr.py
 def psnr(original, contrast):

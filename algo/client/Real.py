@@ -40,3 +40,4 @@ class Client(ClientBase):
     
     def run(self):
         self.train()
+        self.callback()
