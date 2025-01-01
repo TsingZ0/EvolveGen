@@ -20,7 +20,7 @@ class InceptionWrapper(nn.Module):
     def forward(self, x):
         if x.shape[2] < 299 or x.shape[3] < 299:
             x = self.resize(x)
-        out = self.model(x)
+        out = self.model(x).logits
         return out
 
 
