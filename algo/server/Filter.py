@@ -42,7 +42,7 @@ class Server(ServerBase):
             print(f"Total running cost per iter.: {round(time.time()-start, 2)}s.")
             self.callback_per_iter()
 
-        if len(self.train_acc[1:]) > 0:
+        if len(self.test_acc) > 2:
             train_best = max(self.train_acc[1:])
             test_best = max(self.test_acc[1:])
             FID_best = min(self.FID[1:])

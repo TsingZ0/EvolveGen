@@ -364,7 +364,7 @@ class ClientBase(object):
 
     def callback(self):
         train_dataset_dir = os.path.join(self.args.dataset_dir, 'train', self.args.task)
-        train_dataset_path = os.path.join(train_dataset_dir, f'{self.it}/dataset.pt')
+        train_dataset_path = os.path.join(train_dataset_dir, f'{self.it-1}/dataset.pt')
         if os.path.exists(train_dataset_path):
             os.remove(train_dataset_path)
 
