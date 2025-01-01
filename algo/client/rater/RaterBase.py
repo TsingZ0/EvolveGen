@@ -13,7 +13,7 @@ class Client(ClientBase):
         super().__init__(args)
         
         self.real_vecs = [[] for _ in range(self.args.num_labels)]
-        real_loader = self.load_real_dataset()
+        real_loader = self.load_real_dataset(batch_size=1)
         for x, y in real_loader:
             x = x.to(self.args.device)
             y = y.to(self.args.device)
@@ -41,18 +41,20 @@ class Client(ClientBase):
         else:
             return copy.deepcopy(self.current_volume_per_label), self.done
         
-    def load_filtered_dataset(self, is_raw=False):
+    def load_filtered_dataset(self, is_raw=False, batch_size=None):
         filtered_dataset_dir = os.path.join(self.args.dataset_dir, 'train', self.args.task)
         try:
             filtered_dataset = torch.load(os.path.join(filtered_dataset_dir, f'{self.it}/filtered_dataset.pt'))
             if is_raw:
                 return filtered_dataset
             else:
+                if batch_size is None:
+                    batch_size = self.args.client_batch_size
                 filtered_dataset_new = []
                 for data in filtered_dataset:
                     for x, y in data:
                         filtered_dataset_new.append((x, y))
-                return DataLoader(filtered_dataset_new, self.args.client_batch_size, drop_last=False, shuffle=True)
+                return DataLoader(filtered_dataset_new, batch_size, drop_last=False, shuffle=True)
         except (FileNotFoundError, ValueError):
             return None
         

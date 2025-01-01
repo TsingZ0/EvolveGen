@@ -1,3 +1,4 @@
+import gc
 import torch
 import numpy as np
 import random
@@ -57,7 +58,9 @@ def run(args):
             raise NotImplementedError
                 
         server.run()
+        del server
         torch.cuda.empty_cache()
+        gc.collect()
 
     print(f"\nTotal time cost: {round(time.time()-start, 2)}s.")
     print("All done!")
@@ -136,7 +139,8 @@ if __name__ == "__main__":
     parser.add_argument('-cue', "--client_use_embedding", type=str, default="", 
                         help="Refer to client_model")
     parser.add_argument('-cret', "--client_retrain", type=bool, default=False)
-    parser.add_argument('-cbs', "--client_batch_size", type=int, default=128)
+    parser.add_argument('-cbs', "--client_batch_size", type=int, default=16, 
+                        help="Edge clients require small batch size")
     parser.add_argument('-clr', "--client_learning_rate", type=float, default=0.001)
     parser.add_argument('-ce', "--client_epochs", type=int, default=100)
     parser.add_argument('-cuf', "--client_use_filtered", type=bool, default=False)

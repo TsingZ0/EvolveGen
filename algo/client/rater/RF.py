@@ -12,7 +12,7 @@ class Client(Rater):
     def rater(self, filtered_dataset):
         self.model.eval()
 
-        train_loader = self.load_train_dataset(is_shuffle=False)
+        train_loader = self.load_train_dataset(is_shuffle=False, batch_size=1)
         last_yc = None
         for x, y in train_loader:
             x = x.to(self.args.device)

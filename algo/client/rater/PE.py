@@ -26,7 +26,7 @@ class Client(Rater):
         ]
         
         train_vecs = [[] for _ in range(self.args.num_labels)]
-        train_loader = self.load_train_dataset(is_shuffle=False)
+        train_loader = self.load_train_dataset(is_shuffle=False, batch_size=1)
         for x, y in train_loader:
             x = x.to(self.args.device)
             y = y.to(self.args.device)

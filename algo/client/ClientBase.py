@@ -47,6 +47,7 @@ class ClientBase(object):
             self.encoder = get_resnet(args)
         else:
             self.encoder = self.model.encoder
+        self.encoder.eval()
 
 
     def send(self, content=None):
@@ -63,30 +64,36 @@ class ClientBase(object):
         train_dataset_dir = os.path.join(self.args.dataset_dir, 'train', self.args.task)
         assert os.path.exists(train_dataset_dir), 'train_dataset_dir does not exist'
 
-    def load_eval_dataset(self, is_raw=False):
+    def load_eval_dataset(self, is_raw=False, batch_size=None):
         eval_dataset_dir = os.path.join(self.args.dataset_dir, 'test')
         eval_dataset = torch.load(os.path.join(eval_dataset_dir, self.args.client_dataset + '.pt'))
         if is_raw:
             return eval_dataset
         else:
-            return DataLoader(eval_dataset, self.args.client_batch_size, drop_last=False, shuffle=True)
+            if batch_size is None:
+                batch_size = self.args.client_batch_size
+            return DataLoader(eval_dataset, batch_size, drop_last=False, shuffle=True)
 
-    def load_real_dataset(self, is_raw=False):
+    def load_real_dataset(self, is_raw=False, batch_size=None):
         real_dataset_dir = os.path.join(self.args.dataset_dir, f'real/{self.args.real_volume_per_label}')
         real_dataset = torch.load(os.path.join(real_dataset_dir, self.args.client_dataset + '.pt'))
         if is_raw:
             return real_dataset
         else:
-            return DataLoader(real_dataset, self.args.client_batch_size, drop_last=False, shuffle=True)
+            if batch_size is None:
+                batch_size = self.args.client_batch_size
+            return DataLoader(real_dataset, batch_size, drop_last=False, shuffle=True)
 
-    def load_train_dataset(self, is_raw=False, is_shuffle=True):
+    def load_train_dataset(self, is_raw=False, is_shuffle=True, batch_size=None):
         train_dataset_dir = os.path.join(self.args.dataset_dir, 'train', self.args.task)
         try:
             train_dataset = torch.load(os.path.join(train_dataset_dir, f'{self.it}/dataset.pt'))
             if is_raw:
                 return train_dataset
             else:
-                return DataLoader(train_dataset, self.args.client_batch_size, drop_last=False, shuffle=is_shuffle)
+                if batch_size is None:
+                    batch_size = self.args.client_batch_size
+                return DataLoader(train_dataset, batch_size, drop_last=False, shuffle=is_shuffle)
         except FileNotFoundError:
             return None
         
@@ -112,44 +119,41 @@ class ClientBase(object):
         for pr in preds_per_label:
             preds.extend(pr)
 
-        # train_loader = self.load_train_dataset()
-        # real_per_label = [[] for _ in range(self.args.num_labels)]
-        # gen_per_label = [[] for _ in range(self.args.num_labels)]
-        # if train_loader is not None:
-        #     real_loader = self.load_real_dataset()
-        #     FID = FrechetInceptionDistance(
-        #         self.encoder, 
-        #         self.encoder.feature_dim, 
-        #         self.args.device
-        #     )
-        #     FIDs = [FrechetInceptionDistance(
-        #             self.encoder, 
-        #             self.encoder.feature_dim, 
-        #             self.args.device
-        #         ) for _ in range(self.args.num_labels)
-        #     ]
-        #     with torch.no_grad():
-        #         for x, y in real_loader:
-        #             FID.update(x, is_real=True)
-        #             for xx, yy in zip(x, y):
-        #                 yc = yy.item()
-        #                 FIDs[yc].update(xx.unsqueeze(0), is_real=True)
-        #                 real_per_label[yc].append(xx.cpu().numpy())
-        #         for x, y in train_loader:
-        #             FID.update(x, is_real=False)
-        #             for xx, yy in zip(x, y):
-        #                 yc = yy.item()
-        #                 FIDs[yc].update(xx.unsqueeze(0), is_real=False)
-        #                 gen_per_label[yc].append(xx.cpu().numpy())
-        #     FID_metrics = (FID.compute(), [f.compute() for f in FIDs])
-        #     PSNRs = self.avg_pair_psnr(real_per_label, gen_per_label)
-        #     PSNR_metrics = (sum(PSNRs)/len(PSNRs), PSNRs)
-        # else:
-        #     FID_metrics = (0, [0 for _ in range(self.args.num_labels)])
-        #     PSNR_metrics = (0, [0 for _ in range(self.args.num_labels)])
-
-        FID_metrics = (0, [0 for _ in range(self.args.num_labels)])
-        PSNR_metrics = (0, [0 for _ in range(self.args.num_labels)])
+        train_loader = self.load_train_dataset()
+        real_per_label = [[] for _ in range(self.args.num_labels)]
+        gen_per_label = [[] for _ in range(self.args.num_labels)]
+        if train_loader is not None:
+            real_loader = self.load_real_dataset()
+            FID = FrechetInceptionDistance(
+                self.encoder, 
+                self.encoder.feature_dim, 
+                self.args.device
+            )
+            FIDs = [FrechetInceptionDistance(
+                    self.encoder, 
+                    self.encoder.feature_dim, 
+                    self.args.device
+                ) for _ in range(self.args.num_labels)
+            ]
+            with torch.no_grad():
+                for x, y in real_loader:
+                    FID.update(x, is_real=True)
+                    for xx, yy in zip(x, y):
+                        yc = yy.item()
+                        FIDs[yc].update(xx.unsqueeze(0), is_real=True)
+                        real_per_label[yc].append(xx.cpu().numpy())
+                for x, y in train_loader:
+                    FID.update(x, is_real=False)
+                    for xx, yy in zip(x, y):
+                        yc = yy.item()
+                        FIDs[yc].update(xx.unsqueeze(0), is_real=False)
+                        gen_per_label[yc].append(xx.cpu().numpy())
+            FID_metrics = (FID.compute(), [f.compute() for f in FIDs])
+            PSNRs = self.avg_pair_psnr(real_per_label, gen_per_label)
+            PSNR_metrics = (sum(PSNRs)/len(PSNRs), PSNRs)
+        else:
+            FID_metrics = (0, [0 for _ in range(self.args.num_labels)])
+            PSNR_metrics = (0, [0 for _ in range(self.args.num_labels)])
 
         return {
             'PSNR': PSNR_metrics, 
@@ -367,6 +371,7 @@ class ClientBase(object):
         train_dataset_path = os.path.join(train_dataset_dir, f'{self.it-1}/dataset.pt')
         if os.path.exists(train_dataset_path):
             os.remove(train_dataset_path)
+
 
 # https://github.com/jackfrued/Python-1/blob/master/analysis/compression_analysis/psnr.py
 def psnr(original, contrast):
