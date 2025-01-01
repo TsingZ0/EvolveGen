@@ -36,12 +36,10 @@ class ViTWrapper(nn.Module):
         self.model.heads = nn.Identity()
         self.model.to(args.device)
 
-        # image min_size: height=224, width=224
         self.resize = torchvision.transforms.Resize(size=224)
 
     def forward(self, x):
-        if x.shape[2] < 224 or x.shape[3] < 224:
-            x = self.resize(x)
+        x = self.resize(x)
         out = self.model(x)
         return out
 

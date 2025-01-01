@@ -14,12 +14,10 @@ class InceptionWrapper(nn.Module):
         self.model.fc = nn.Identity()
         self.model.to(args.device)
 
-        # image min_size: height=299, width=299
         self.resize = torchvision.transforms.Resize(size=299)
 
     def forward(self, x):
-        if x.shape[2] < 299 or x.shape[3] < 299:
-            x = self.resize(x)
+        x = self.resize(x)
         out = self.model(x).logits
         return out
 
