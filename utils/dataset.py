@@ -380,6 +380,7 @@ def get_real_data(args):
             domain = 'histological lymph node section'
             label_names = ['', 'breast cancer with a tumor tissue']
         elif args.client_dataset == 'kvasir':
+            # https://datasets.simula.no/kvasir/
             data_dir = 'dataset/rawdata/kvasir-dataset-v2/'
             label_names = ['esophagitis', 'polyps', 'ulcerative-colitis']
             file_names = []
@@ -407,6 +408,7 @@ def get_real_data(args):
             real_set = select_data(dataset, test_index, full_len_per_label)
             domain = 'pathological damage in mucosa of gastrointestinal tract'
         elif args.client_dataset == 'COVIDx':
+            # https://www.kaggle.com/datasets/andyczhao/covidx-cxr2
             data_dir = 'dataset/rawdata/COVIDx/'
             val_df = pd.read_csv(data_dir + 'val.txt', sep=" ", header=None)
             val_df.columns=['patient_id', 'file_name', 'class', 'data_source']
@@ -437,6 +439,7 @@ def get_real_data(args):
             domain = 'chest radiography (X-ray)'
             label_names = ['', 'COVID-19 pneumonia']
         elif args.client_dataset == 'PrivateCat':
+            # https://www.kaggle.com/datasets/fjxmlzn/cat-cookie-doudou
             data_dir = 'dataset/rawdata/PrivateCat/'
             label_names = ['cookie', 'doudou']
             file_names = []
