@@ -1,14 +1,11 @@
 import glob
 import os
-import random
 import re
 import time
 import torch
 from utils.dataset import preprocess_image 
 from utils.generator import get_generator 
 from utils.prompts import *
-from utils.dataset import inv_normalize
-from collections import defaultdict
 
 
 class ServerBase(object):
@@ -24,7 +21,6 @@ class ServerBase(object):
         self.test_acc = []
         self.FID = []
         self.PSNR = []
-        self.ref_imgs = defaultdict(list)
 
         if not args.use_generated:
             self.base_prompt = base_prompt
@@ -59,16 +55,7 @@ class ServerBase(object):
         self.client.receive()
 
     def receive(self):
-        if self.args.task_mode == 'I2I': 
-            self.ref_imgs = defaultdict(list)
-            self.current_volume_per_label, self.done, data = self.client.send('real')
-            for img, y in data:
-                if self.args.do_norm:
-                    img = inv_normalize(img)
-                label_name = self.args.label_names[y.item()]
-                self.ref_imgs[label_name].append(img)
-        else:
-            self.current_volume_per_label, self.done = self.client.send()
+        self.current_volume_per_label, self.done = self.client.send()
 
     def get_prompt(self, label_name):
         prompt = self.base_prompt.format(
@@ -78,11 +65,7 @@ class ServerBase(object):
         return prompt
 
     def get_img(self, label_name):
-        if len(self.ref_imgs[label_name]) > 0:
-            random_img = random.sample(self.ref_imgs[label_name], 1)[0]
-            return random_img
-        else:
-            return None
+        return None
 
     def generate(self):
         current_dir = os.path.join(self.generated_dataset_dir, f'{self.it}')
