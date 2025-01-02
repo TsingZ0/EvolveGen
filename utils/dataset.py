@@ -436,6 +436,33 @@ def get_real_data(args):
             test_set = [(x[0], y[0]) for x, y in test_loader]
             domain = 'chest radiography (X-ray)'
             label_names = ['', 'COVID-19 pneumonia']
+        elif args.client_dataset == 'PrivateCat':
+            data_dir = 'dataset/rawdata/PrivateCat/'
+            label_names = ['cookie', 'doudou']
+            file_names = []
+            labels = []
+            for dir in os.listdir(data_dir):
+                if dir in label_names:
+                    label = label_names.index(dir)
+                    for file_name in os.listdir(os.path.join(data_dir, dir)):
+                        file_names.append(os.path.join(dir, file_name))
+                        labels.append(label)
+            df = pd.DataFrame({'file_name': file_names, 'class': labels})
+
+            dataset = ImageDataset(df, data_dir, transforms.ToTensor())
+            any_loader = DataLoader(dataset)
+            H = next(iter(any_loader))[0].shape[-2]
+            W = next(iter(any_loader))[0].shape[-1]
+            args.img_size = min(min(H, W), args.image_max_size)
+
+            transform = transforms.Compose(
+                [transforms.Resize((args.img_size, args.img_size)), transforms.ToTensor()])
+            dataset = ImageDataset(df, data_dir, transform)
+            full_len_per_label = len(dataset) // len(label_names)
+            test_index = int(full_len_per_label * args.test_ratio)
+            test_set = select_data(dataset, 0, test_index)
+            real_set = select_data(dataset, test_index, full_len_per_label)
+            domain = 'ragdoll cat'
         else:
             raise NotImplemented
             
