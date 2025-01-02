@@ -105,7 +105,6 @@ if __name__ == "__main__":
     parser.add_argument('-ims', "--image_max_size", type=int, default=256)
     parser.add_argument('-vpl', "--volume_per_label", type=int, default=1)
     parser.add_argument('-oa', "--online_api", type=bool, default=False)
-    parser.add_argument('-ak', "--authorization_key", type=str, default="")
     parser.add_argument('-sgen', "--server_generator", type=str, default="StableDiffusion", 
                         choices=[
                             "StableDiffusion", 
