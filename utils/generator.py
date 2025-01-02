@@ -55,7 +55,7 @@ class Text2ImageWrapper(torch.nn.Module):
         self.img_size = max(512, args.img_size)
 
 
-    def __call__(self, prompt, img, negative_prompt):
+    def __call__(self, prompt, negative_prompt):
         with torch.no_grad():
             if self.args.server_generator == 'FLUX':
                 res = self.GenPipe(prompt=prompt, 
@@ -143,15 +143,11 @@ class Image2ImageWrapper(torch.nn.Module):
 
     def __call__(self, prompt, img, negative_prompt):
         with torch.no_grad():
-            if img is None:
-                image = self.transform(torch.rand(3, self.img_size, self.img_size)).convert("RGB")
-            else:
-                image = self.transform(img).resize((self.img_size, self.img_size)).convert("RGB")
-
+            image = self.transform(img).resize((self.img_size, self.img_size)).convert("RGB")
             if self.args.server_generator == 'FLUX':
                 res = self.GenPipe(prompt=prompt, 
                     image=image, 
-                    strength=self.args.i2i_strength if img is not None else 1, 
+                    strength=self.args.i2i_strength, 
                     height=self.img_size, 
                     width=self.img_size, 
                     num_images_per_prompt=self.args.num_images_per_prompt, 
@@ -159,7 +155,7 @@ class Image2ImageWrapper(torch.nn.Module):
             else:
                 res = self.GenPipe(prompt=prompt, 
                     image=image, 
-                    strength=self.args.i2i_strength if img is not None else 1, 
+                    strength=self.args.i2i_strength, 
                     negative_prompt=negative_prompt, 
                     height=self.img_size, 
                     width=self.img_size, 
@@ -181,6 +177,9 @@ def get_generator(args):
     if args.task_mode == 'T2I':
         return Text2ImageWrapper(args)
     elif args.task_mode == 'I2I':
-        return Image2ImageWrapper(args)
+        if args.random_gen:
+            return Text2ImageWrapper(args)
+        else:
+            return Image2ImageWrapper(args)
     else:
         raise NotImplementedError

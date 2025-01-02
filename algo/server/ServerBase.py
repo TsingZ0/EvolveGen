@@ -92,7 +92,10 @@ class ServerBase(object):
             while offset < self.args.volume_per_label:
                 prompt = self.get_prompt(label_name)
                 img = self.get_img(label_name)
-                generated_images = self.Gen(prompt, img, self.negative_prompt)
+                if img is None:
+                    generated_images = self.Gen(prompt, self.negative_prompt)
+                else:
+                    generated_images = self.Gen(prompt, img, self.negative_prompt)
                 result_images = generated_images[:self.args.volume_per_label - offset]
                 
                 for idx, img in enumerate(result_images):

@@ -1,15 +1,19 @@
 import copy
+import gc
 import os
 import numpy as np
+import torch
 import ujson
 from algo.server.Filter import Server as Filter
 from utils.dataset import inv_normalize
 from collections import defaultdict
 from utils.dataset import preprocess_image 
+from utils.generator import get_generator 
 
 
 class Server(Filter):
     def __init__(self, args):
+        args.random_gen = True
         super().__init__(args)
 
         self.ref_imgs_prob = defaultdict(list)
@@ -25,6 +29,15 @@ class Server(Filter):
             self.current_volume_per_label, self.done, self.ref_imgs_prob = self.client.send('rated')
             with open(os.path.join(previous_dir, 'ref_imgs_prob.json'), 'w') as f:
                 ujson.dump(self.ref_imgs_prob, f)
+            
+            print('\nReload I2I generator')
+            if self.it == 1:
+                del self.Gen
+                torch.cuda.empty_cache()
+                gc.collect()
+                self.args.random_gen = False
+                self.Gen = get_generator(self.args)
+
 
     def get_img(self, label_name):
         label_id = self.args.label_names.index(label_name)
