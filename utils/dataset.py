@@ -441,12 +441,12 @@ def get_real_data(args):
         elif args.client_dataset == 'PrivateCat':
             # https://www.kaggle.com/datasets/fjxmlzn/cat-cookie-doudou
             data_dir = 'dataset/rawdata/PrivateCat/'
-            label_names = ['cookie', 'doudou']
+            dir_names = ['cookie', 'doudou']
             file_names = []
             labels = []
             for dir in os.listdir(data_dir):
-                if dir in label_names:
-                    label = label_names.index(dir)
+                if dir in dir_names:
+                    label = dir_names.index(dir)
                     for file_name in os.listdir(os.path.join(data_dir, dir)):
                         file_names.append(os.path.join(dir, file_name))
                         labels.append(label)
@@ -461,6 +461,7 @@ def get_real_data(args):
             transform = transforms.Compose(
                 [transforms.Resize((args.img_size, args.img_size)), transforms.ToTensor()])
             dataset = ImageDataset(df, data_dir, transform)
+            label_names = ['', '_']
             full_len_per_label = len(dataset) // len(label_names)
             test_index = int(full_len_per_label * args.test_ratio)
             test_set = select_data(dataset, 0, test_index)
