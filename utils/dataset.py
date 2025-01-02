@@ -466,6 +466,36 @@ def get_real_data(args):
             test_set = select_data(dataset, 0, test_index)
             real_set = select_data(dataset, test_index, full_len_per_label)
             domain = 'ragdoll cat'
+        elif args.client_dataset == 'MVTecADLeather':
+            # https://www.mvtec.com/company/research/datasets/mvtec-ad
+            data_dir = 'dataset/rawdata/MVTecADLeather/'
+            dir_names = ['good', 'cut', 'glue']
+            # only 19 images in each class
+            file_names = []
+            labels = []
+            for dir in os.listdir(data_dir):
+                if dir in dir_names:
+                    label = dir_names.index(dir)
+                    for file_name in os.listdir(os.path.join(data_dir, dir)):
+                        file_names.append(os.path.join(dir, file_name))
+                        labels.append(label)
+            df = pd.DataFrame({'file_name': file_names, 'class': labels})
+
+            dataset = ImageDataset(df, data_dir, transforms.ToTensor())
+            any_loader = DataLoader(dataset)
+            H = next(iter(any_loader))[0].shape[-2]
+            W = next(iter(any_loader))[0].shape[-1]
+            args.img_size = min(min(H, W), args.image_max_size)
+
+            transform = transforms.Compose(
+                [transforms.Resize((args.img_size, args.img_size)), transforms.ToTensor()])
+            dataset = ImageDataset(df, data_dir, transform)
+            label_names = ['', 'cut defect', 'droplet defect']
+            full_len_per_label = len(dataset) // len(label_names)
+            test_index = int(full_len_per_label * args.test_ratio)
+            test_set = select_data(dataset, 0, test_index)
+            real_set = select_data(dataset, test_index, full_len_per_label)
+            domain = 'leather texture'
         else:
             raise NotImplemented
             
