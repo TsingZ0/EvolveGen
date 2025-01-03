@@ -53,7 +53,8 @@ python -u main.py \
   -eps 5 \        # Privacy budget epsilon
   -rvpl 10 \      # Real volume per label
   -vpl 100 \      # Generated volume per label
-  -sgen StableDiffusion \  # Stable Diffusion API
+  -oa 1 \         # Use online free API
+  -sgen StableDiffusionXL \  # Use StableDiffusionXL API
   -cret 1 \       # Other hyperparameter
   -cue ResNet18 \ # Edge client embedding model
   -cmodel ResNet18 \ # Edge client model
