@@ -30,8 +30,8 @@ class Server(Filter):
             with open(os.path.join(previous_dir, 'ref_imgs_prob.json'), 'w') as f:
                 ujson.dump(self.ref_imgs_prob, f)
             
-            print('\nReload I2I generator')
             if self.it == 1:
+                print('\nReload I2I generator...')
                 del self.Gen
                 torch.cuda.empty_cache()
                 gc.collect()
@@ -46,11 +46,17 @@ class Server(Filter):
             previous_dir = os.path.join(self.generated_dataset_dir, f'{self.it-1}')
             sampled_idx = np.random.choice(len(imgs_prob), 1, p=imgs_prob)[0].item()
             offset = self.previous_volume_per_label[label_id]
-            file_name = os.path.join(previous_dir, f'[{label_name}]-{offset + sampled_idx}.jpg')
-            random_img = preprocess_image(self.args, file_name)
-            if self.args.do_norm:
-                random_img = inv_normalize(random_img)
-            return random_img
+            file_name = f'[{label_name}]-{offset + sampled_idx}.jpg'
+            if self.args.online_api:
+                with open(os.path.join(previous_dir, 'image_urls.json'), 'r') as f:
+                    image_urls_dict = ujson.load(f)
+                return image_urls_dict[file_name]
+            else:
+                file_path = os.path.join(previous_dir, file_name)
+                random_img = preprocess_image(self.args, file_path)
+                if self.args.do_norm:
+                    random_img = inv_normalize(random_img)
+                return random_img
         else:
             return None
         

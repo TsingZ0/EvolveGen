@@ -1,13 +1,20 @@
+import random
+import requests
 import torch
 import inspect
 import logging
 import torchvision.transforms as transforms
 from diffusers import AutoPipelineForText2Image, AutoPipelineForImage2Image
 from diffusers.pipelines.stable_diffusion.safety_checker import StableDiffusionSafetyChecker
-
+from io import BytesIO
+from PIL import Image
 
 module = inspect.getmodule(StableDiffusionSafetyChecker)
 logging.getLogger(module.__name__).setLevel(logging.ERROR)
+
+# get your own AUTHORIZATIONKEY from https://cloud.siliconflow.cn/account/ak
+# access to the siliconflow API is free for StableDiffusion-2-1 and StableDiffusionXL
+AUTHORIZATIONKEY = ""
 
 
 class Text2ImageWrapper(torch.nn.Module):
@@ -15,70 +22,113 @@ class Text2ImageWrapper(torch.nn.Module):
         super().__init__()
         self.args = args
 
-        if args.server_generator == 'StableDiffusion':
-            self.GenPipe = AutoPipelineForText2Image.from_pretrained(
-                'generator/stable-diffusion-v1-5', 
-                torch_dtype=torch.float16, 
-                device_map='balanced', 
-                local_files_only=True, 
-                use_safetensors=True,
-            )
-        elif args.server_generator == 'StableDiffusionXL':
-            self.GenPipe = AutoPipelineForText2Image.from_pretrained(
-                'generator/stable-diffusion-xl-base-1.0', 
-                torch_dtype=torch.float16, 
-                device_map='balanced', 
-                local_files_only=True, 
-                use_safetensors=True,
-            )
-        elif args.server_generator == 'OpenJourney':
-            self.GenPipe = AutoPipelineForText2Image.from_pretrained(
-                'generator/openjourney', 
-                torch_dtype=torch.float16, 
-                device_map='balanced', 
-                local_files_only=True, 
-                use_safetensors=True,
-            )
-        elif args.server_generator == 'FLUX':
-            self.GenPipe = AutoPipelineForText2Image.from_pretrained(
-                'generator/FLUX.1-dev', 
-                torch_dtype=torch.float16, 
-                device_map='balanced', 
-                max_memory={0:'10GB'}, 
-                local_files_only=True, 
-                use_safetensors=True,
-            )
+        if args.online_api:
+            self.AuthorizationKey = AUTHORIZATIONKEY
+            if args.server_generator == 'StableDiffusion-2-1':
+                self.api_model_name = 'stabilityai/stable-diffusion-2-1'
+            elif args.server_generator == 'StableDiffusionXL':
+                self.api_model_name = 'stabilityai/stable-diffusion-xl-base-1.0'
+            else:
+                raise NotImplementedError
         else:
-            raise NotImplementedError
-        
-        self.GenPipe.set_progress_bar_config(disable=True)
+            if args.server_generator == 'StableDiffusion':
+                self.GenPipe = AutoPipelineForText2Image.from_pretrained(
+                    'generator/stable-diffusion-v1-5', 
+                    torch_dtype=torch.float16, 
+                    device_map='balanced', 
+                    local_files_only=True, 
+                    use_safetensors=True,
+                )
+            elif args.server_generator == 'StableDiffusionXL':
+                self.GenPipe = AutoPipelineForText2Image.from_pretrained(
+                    'generator/stable-diffusion-xl-base-1.0', 
+                    torch_dtype=torch.float16, 
+                    device_map='balanced', 
+                    local_files_only=True, 
+                    use_safetensors=True,
+                )
+            elif args.server_generator == 'OpenJourney':
+                self.GenPipe = AutoPipelineForText2Image.from_pretrained(
+                    'generator/openjourney', 
+                    torch_dtype=torch.float16, 
+                    device_map='balanced', 
+                    local_files_only=True, 
+                    use_safetensors=True,
+                )
+            elif args.server_generator == 'FLUX':
+                self.GenPipe = AutoPipelineForText2Image.from_pretrained(
+                    'generator/FLUX.1-dev', 
+                    torch_dtype=torch.float16, 
+                    device_map='balanced', 
+                    max_memory={0:'10GB'}, 
+                    local_files_only=True, 
+                    use_safetensors=True,
+                )
+            else:
+                raise NotImplementedError
+            
+            self.GenPipe.set_progress_bar_config(disable=True)
+
         self.img_size = max(512, args.img_size)
 
 
     def __call__(self, prompt, negative_prompt):
-        with torch.no_grad():
-            if self.args.server_generator == 'FLUX':
-                res = self.GenPipe(prompt=prompt, 
-                    height=self.img_size, 
-                    width=self.img_size, 
-                    num_images_per_prompt=self.args.num_images_per_prompt, 
-                )
-            else:
-                res = self.GenPipe(prompt=prompt, 
-                    negative_prompt=negative_prompt, 
-                    height=self.img_size, 
-                    width=self.img_size, 
-                    num_images_per_prompt=self.args.num_images_per_prompt, 
-                )
+        if self.args.online_api:
+            url = "https://api.siliconflow.cn/v1/images/generations"
+            payload = {
+                "model": self.api_model_name,
+                "prompt": prompt,
+                "negative_prompt": negative_prompt,
+                "image_size": f"{self.img_size}x{self.img_size}",
+                "batch_size": 1,
+                "seed": random.randint(1, 4999999999),
+                "num_inference_steps": 50,
+                "guidance_scale": 7.5,
+            }
+            headers = {
+                "Authorization": f"Bearer {self.AuthorizationKey}",
+                "Content-Type": "application/json"
+            }
+            while True:
+                response = requests.request("POST", url, json=payload, headers=headers)
+                if response.status_code == 200:
+                    generated_images = []
+                    image_urls = []
+                    for image in response.json()["images"]:
+                        image_url = image["url"]
+                        image_urls.append(image_url)
+                        generated_content = requests.get(image_url).content
+                        generated_bytes = BytesIO(generated_content)
+                        generated_image = Image.open(generated_bytes)
+                        generated_images.append(generated_image)
+                    return generated_images, image_urls
+                else:
+                    print('Error: response.status_code:', response.status_code)
+                    print(response.text)
+        else:
+            with torch.no_grad():
+                if self.args.server_generator == 'FLUX':
+                    res = self.GenPipe(prompt=prompt, 
+                        height=self.img_size, 
+                        width=self.img_size, 
+                        num_images_per_prompt=self.args.num_images_per_prompt, 
+                    )
+                else:
+                    res = self.GenPipe(prompt=prompt, 
+                        negative_prompt=negative_prompt, 
+                        height=self.img_size, 
+                        width=self.img_size, 
+                        num_images_per_prompt=self.args.num_images_per_prompt, 
+                    )
 
-            if self.args.server_generator in ['StableDiffusionXL', 'FLUX']:
-                return res.images
-            else:
-                generated_images = []
-                for idx, nsfw in enumerate(res.nsfw_content_detected):
-                    if not nsfw:
-                        generated_images.append(res.images[idx])
-                return generated_images
+                if self.args.server_generator in ['StableDiffusionXL', 'FLUX']:
+                    return res.images, []
+                else:
+                    generated_images = []
+                    for idx, nsfw in enumerate(res.nsfw_content_detected):
+                        if not nsfw:
+                            generated_images.append(res.images[idx])
+                    return generated_images, []
 
 
 class Image2ImageWrapper(torch.nn.Module):
@@ -86,92 +136,136 @@ class Image2ImageWrapper(torch.nn.Module):
         super().__init__()
         self.args = args
 
-        if args.server_generator == 'StableDiffusion':
-            self.GenPipe = AutoPipelineForImage2Image.from_pretrained(
-                'generator/stable-diffusion-v1-5', 
-                torch_dtype=torch.float16, 
-                device_map='balanced', 
-                local_files_only=True, 
-                use_safetensors=True,
-            )
-            if args.use_IPAdapter:
-                self.GenPipe.load_ip_adapter(
-                    "generator/IP-Adapter", 
-                    subfolder="models", 
-                    weight_name="ip-adapter_sd15.safetensors"
-                )
-        elif args.server_generator == 'StableDiffusionXL':
-            self.GenPipe = AutoPipelineForImage2Image.from_pretrained(
-                'generator/stable-diffusion-xl-base-1.0', 
-                torch_dtype=torch.float16, 
-                device_map='balanced', 
-                local_files_only=True, 
-                use_safetensors=True,
-            )
-            if args.use_IPAdapter:
-                self.GenPipe.load_ip_adapter(
-                    "generator/IP-Adapter", 
-                    subfolder="sdxl_models", 
-                    weight_name="ip-adapter_sdxl.safetensors"
-                )
-        elif args.server_generator == 'OpenJourney':
-            self.GenPipe = AutoPipelineForImage2Image.from_pretrained(
-                'generator/openjourney', 
-                torch_dtype=torch.float16, 
-                device_map='balanced', 
-                local_files_only=True, 
-                use_safetensors=True,
-            )
-        elif args.server_generator == 'FLUX':
-            self.GenPipe = AutoPipelineForImage2Image.from_pretrained(
-                'generator/FLUX.1-dev', 
-                torch_dtype=torch.float16, 
-                device_map='balanced', 
-                max_memory={0:'10GB'}, 
-                local_files_only=True, 
-                use_safetensors=True,
-            )
+        if args.online_api:
+            self.AuthorizationKey = AUTHORIZATIONKEY
+            if args.server_generator == 'StableDiffusion-2-1':
+                self.api_model_name = 'stabilityai/stable-diffusion-2-1'
+            elif args.server_generator == 'StableDiffusionXL':
+                self.api_model_name = 'stabilityai/stable-diffusion-xl-base-1.0'
+            else:
+                raise NotImplementedError
         else:
-            raise NotImplementedError
-        
-        self.GenPipe.set_progress_bar_config(disable=True)
-        if args.use_IPAdapter:
-            self.GenPipe.set_ip_adapter_scale(args.IPAdapter_scale)
+            if args.server_generator == 'StableDiffusion':
+                self.GenPipe = AutoPipelineForImage2Image.from_pretrained(
+                    'generator/stable-diffusion-v1-5', 
+                    torch_dtype=torch.float16, 
+                    device_map='balanced', 
+                    local_files_only=True, 
+                    use_safetensors=True,
+                )
+                if args.use_IPAdapter:
+                    self.GenPipe.load_ip_adapter(
+                        "generator/IP-Adapter", 
+                        subfolder="models", 
+                        weight_name="ip-adapter_sd15.safetensors"
+                    )
+            elif args.server_generator == 'StableDiffusionXL':
+                self.GenPipe = AutoPipelineForImage2Image.from_pretrained(
+                    'generator/stable-diffusion-xl-base-1.0', 
+                    torch_dtype=torch.float16, 
+                    device_map='balanced', 
+                    local_files_only=True, 
+                    use_safetensors=True,
+                )
+                if args.use_IPAdapter:
+                    self.GenPipe.load_ip_adapter(
+                        "generator/IP-Adapter", 
+                        subfolder="sdxl_models", 
+                        weight_name="ip-adapter_sdxl.safetensors"
+                    )
+            elif args.server_generator == 'OpenJourney':
+                self.GenPipe = AutoPipelineForImage2Image.from_pretrained(
+                    'generator/openjourney', 
+                    torch_dtype=torch.float16, 
+                    device_map='balanced', 
+                    local_files_only=True, 
+                    use_safetensors=True,
+                )
+            elif args.server_generator == 'FLUX':
+                self.GenPipe = AutoPipelineForImage2Image.from_pretrained(
+                    'generator/FLUX.1-dev', 
+                    torch_dtype=torch.float16, 
+                    device_map='balanced', 
+                    max_memory={0:'10GB'}, 
+                    local_files_only=True, 
+                    use_safetensors=True,
+                )
+            else:
+                raise NotImplementedError
+            
+            self.GenPipe.set_progress_bar_config(disable=True)
+            if args.use_IPAdapter:
+                self.GenPipe.set_ip_adapter_scale(args.IPAdapter_scale)
+
         self.img_size = max(512, args.img_size)
         self.transform = transforms.ToPILImage()
 
 
     def __call__(self, prompt, img, negative_prompt):
-        with torch.no_grad():
-            image = self.transform(img).resize((self.img_size, self.img_size)).convert("RGB")
-            if self.args.server_generator == 'FLUX':
-                res = self.GenPipe(prompt=prompt, 
-                    image=image, 
-                    strength=self.args.i2i_strength, 
-                    height=self.img_size, 
-                    width=self.img_size, 
-                    num_images_per_prompt=self.args.num_images_per_prompt, 
-                )
-            else:
-                res = self.GenPipe(prompt=prompt, 
-                    image=image, 
-                    strength=self.args.i2i_strength, 
-                    negative_prompt=negative_prompt, 
-                    height=self.img_size, 
-                    width=self.img_size, 
-                    num_images_per_prompt=self.args.num_images_per_prompt, 
-                    ip_adapter_image=image if self.args.use_IPAdapter else None, 
-                )
+        if self.args.online_api:
+            url = "https://api.siliconflow.cn/v1/images/generations"
+            payload = {
+                "model": self.api_model_name,
+                "prompt": prompt,
+                "negative_prompt": negative_prompt,
+                "image_size": f"{self.img_size}x{self.img_size}",
+                "batch_size": 1,
+                "seed": random.randint(1, 4999999999),
+                "num_inference_steps": 50,
+                "guidance_scale": 7.5,
+                "image": img, 
+            }
+            headers = {
+                "Authorization": f"Bearer {self.AuthorizationKey}",
+                "Content-Type": "application/json"
+            }
+            while True:
+                response = requests.request("POST", url, json=payload, headers=headers)
+                if response.status_code == 200:
+                    generated_images = []
+                    image_urls = []
+                    for image in response.json()["images"]:
+                        image_url = image["url"]
+                        image_urls.append(image_url)
+                        generated_content = requests.get(image_url).content
+                        generated_bytes = BytesIO(generated_content)
+                        generated_image = Image.open(generated_bytes)
+                        generated_images.append(generated_image)
+                    return generated_images, image_urls
+                else:
+                    print('Error: response.status_code:', response.status_code)
+                    print(response.text)
+        else:
+            with torch.no_grad():
+                image = self.transform(img).resize((self.img_size, self.img_size)).convert("RGB")
+                if self.args.server_generator == 'FLUX':
+                    res = self.GenPipe(prompt=prompt, 
+                        image=image, 
+                        strength=self.args.i2i_strength, 
+                        height=self.img_size, 
+                        width=self.img_size, 
+                        num_images_per_prompt=self.args.num_images_per_prompt, 
+                    )
+                else:
+                    res = self.GenPipe(prompt=prompt, 
+                        image=image, 
+                        strength=self.args.i2i_strength, 
+                        negative_prompt=negative_prompt, 
+                        height=self.img_size, 
+                        width=self.img_size, 
+                        num_images_per_prompt=self.args.num_images_per_prompt, 
+                        ip_adapter_image=image if self.args.use_IPAdapter else None, 
+                    )
 
-            if self.args.server_generator in ['StableDiffusionXL', 'FLUX']:
-                return res.images
-            else:
-                generated_images = []
-                for idx, nsfw in enumerate(res.nsfw_content_detected):
-                    if not nsfw:
-                        generated_images.append(res.images[idx])
-                return generated_images
-            
+                if self.args.server_generator in ['StableDiffusionXL', 'FLUX']:
+                    return res.images
+                else:
+                    generated_images = []
+                    for idx, nsfw in enumerate(res.nsfw_content_detected):
+                        if not nsfw:
+                            generated_images.append(res.images[idx])
+                    return generated_images
+
 
 def get_generator(args):
     if args.task_mode == 'T2I':
