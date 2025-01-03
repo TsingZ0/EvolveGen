@@ -20,7 +20,7 @@ AI's growth has relied on scaling neural networks and training on massive datase
 
 ## How to Use  
 
-1. **Prepare Required Large Model APIs**  
+1. **Prepare the Required Large Model APIs (Skip If Using Online APIs).**  
    - Set up large model APIs either through local deployment (downloading model weights for captioner, generator, LLM, etc.) or via online-accessible APIs.  
 
 2. **Set Up the Environment**  
