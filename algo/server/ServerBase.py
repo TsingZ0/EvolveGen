@@ -83,12 +83,18 @@ class ServerBase(object):
                     generated_images, image_urls = self.Gen(prompt, img, self.negative_prompt)
                 result_images = generated_images[:self.args.volume_per_label - offset]
                 result_urls = image_urls[:self.args.volume_per_label - offset]
-                
-                for idx, (img, url) in enumerate(zip(result_images, result_urls)):
+
+                for idx, img in enumerate(result_images):
                     file_name = f'[{label_name}]-{offset + idx}.jpg'
                     img.save(os.path.join(current_dir, file_name))
-                    image_urls_dict[file_name] = url
+                
+                if len(result_urls) > 0:
+                    for idx, url in enumerate(result_urls):
+                        file_name = f'[{label_name}]-{offset + idx}.jpg'
+                        image_urls_dict[file_name] = url
+
                 offset += len(result_images)
+
         with open(os.path.join(current_dir, 'image_urls.json'), 'w') as f:
             ujson.dump(image_urls_dict, f)
                     
