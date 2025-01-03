@@ -52,11 +52,11 @@ python -u main.py \
   -tm I2I \       # Task Mode: Image to Image
   -f Feedback \   # Framework: Feedback mechanism
   -did 1 \        # GPU device ID
-  -eps 5 \        # Privacy budget epsilon
-  -rvpl 10 \      # Real volume per label
-  -vpl 100 \      # Generated volume per label
+  -eps 0.2 \      # Privacy budget epsilon per iteration
+  -rvpl 1 \       # Real and private volume per label
+  -vpl 2 \        # Generated volume per label
   -oa 1 \         # Use online API
-  -sgen StableDiffusionXL \  # Select StableDiffusionXL as the generative model
+  -sgen StableDiffusionXL \ # Select StableDiffusionXL as the generative model
   -cret 1 \       # Other hyperparameter
   -cue ResNet18 \ # Edge client embedding model
   -cmodel ResNet18 \ # Edge client model
