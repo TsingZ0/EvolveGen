@@ -2,7 +2,7 @@
 
 *CoAutoGen tackles dwindling training data by integrating dataset generation methods with cloud-edge collaboration, enabling **automatic scoring and evolution** in synthetic dataset creation via a **feedback loop** using refined prompts, privacy-protected data, and **offline or online APIs**.*
 
-*You can access **free APIs** for text, image, video, audio, and more at [SiliconFlow](https://cloud.siliconflow.cn/models) or explore affordable options at [Getimg.ai](https://dashboard.getimg.ai/models).*
+*You can access **free APIs** for text, image, video, audio, and more at [SiliconFlow](https://cloud.siliconflow.cn/models) or explore affordable options at [getimg.ai](https://dashboard.getimg.ai/models).*
 
 ![Running Out of Data](https://media.nature.com/lw767/magazine-assets/d41586-024-03990-2/d41586-024-03990-2_50306276.jpg?as=webp)
 
@@ -55,8 +55,8 @@ python -u main.py \
   -eps 5 \        # Privacy budget epsilon
   -rvpl 10 \      # Real volume per label
   -vpl 100 \      # Generated volume per label
-  -oa 1 \         # Use online free API
-  -sgen StableDiffusionXL \  # Use StableDiffusionXL API
+  -oa 1 \         # Use online API
+  -sgen StableDiffusionXL \  # Select StableDiffusionXL as the generative model
   -cret 1 \       # Other hyperparameter
   -cue ResNet18 \ # Edge client embedding model
   -cmodel ResNet18 \ # Edge client model
