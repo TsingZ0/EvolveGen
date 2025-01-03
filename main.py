@@ -113,7 +113,6 @@ if __name__ == "__main__":
                             "FLUX", 
                         ])
     parser.add_argument('-nipp', "--num_images_per_prompt", type=int, default=1)
-    parser.add_argument('-dn', "--do_norm", type=bool, default=False)
     parser.add_argument('-tr', "--test_ratio", type=float, default=0.2, 
                         help="Used when the test set is not originally split")
     parser.add_argument('-pml', "--prompt_max_length", type=int, default=77)

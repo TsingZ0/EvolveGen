@@ -5,7 +5,6 @@ from algo.server.ServerBase import ServerBase
 from algo.client.ClientBase import ClientBase
 from utils.prompts import *
 from utils.captioner import get_captioner
-from utils.dataset import inv_normalize
 from collections import defaultdict
 
 
@@ -24,8 +23,6 @@ class Server(ServerBase):
         assert self.args.task_mode == 'T2I'
         self.current_volume_per_label, self.done, data = self.client.send('real')
         for img, y in data:
-            if self.args.do_norm:
-                img = inv_normalize(img)
             text = self.Cap(img)
             label_name = self.args.label_names[y.item()]
             self.captions[label_name].append(text)

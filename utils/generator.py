@@ -1,9 +1,9 @@
+import base64
 import random
 import requests
 import torch
 import inspect
 import logging
-import torchvision.transforms as transforms
 from diffusers import AutoPipelineForText2Image, AutoPipelineForImage2Image
 from diffusers.pipelines.stable_diffusion.safety_checker import StableDiffusionSafetyChecker
 from io import BytesIO
@@ -13,7 +13,7 @@ module = inspect.getmodule(StableDiffusionSafetyChecker)
 logging.getLogger(module.__name__).setLevel(logging.ERROR)
 
 # get your own AUTHORIZATIONKEY from https://cloud.siliconflow.cn/account/ak
-# access to the siliconflow API is free for StableDiffusion-2-1 and StableDiffusionXL
+# access to the siliconflow API is free
 AUTHORIZATIONKEY = ""
 
 
@@ -198,11 +198,14 @@ class Image2ImageWrapper(torch.nn.Module):
                 self.GenPipe.set_ip_adapter_scale(args.IPAdapter_scale)
 
         self.img_size = max(512, args.img_size)
-        self.transform = transforms.ToPILImage()
 
 
     def __call__(self, prompt, img, negative_prompt):
         if self.args.online_api:
+            buffer = BytesIO()
+            img.save(buffer, format="JPEG")
+            buffer.seek(0)
+            image_base64 = base64.b64encode(buffer.getvalue()).decode("utf-8")
             url = "https://api.siliconflow.cn/v1/images/generations"
             payload = {
                 "model": self.api_model_name,
@@ -213,7 +216,7 @@ class Image2ImageWrapper(torch.nn.Module):
                 "seed": random.randint(1, 4999999999),
                 "num_inference_steps": 50,
                 "guidance_scale": 7.5,
-                "image": img, 
+                "image": image_base64, 
             }
             headers = {
                 "Authorization": f"Bearer {self.AuthorizationKey}",
@@ -237,7 +240,7 @@ class Image2ImageWrapper(torch.nn.Module):
                     print(response.text)
         else:
             with torch.no_grad():
-                image = self.transform(img).resize((self.img_size, self.img_size)).convert("RGB")
+                image = img.resize((self.img_size, self.img_size))
                 if self.args.server_generator == 'FLUX':
                     res = self.GenPipe(prompt=prompt, 
                         image=image, 

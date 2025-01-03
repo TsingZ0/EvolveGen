@@ -10,13 +10,13 @@ from torch.utils.data import DataLoader, Dataset
 
 ssl._create_default_https_context = ssl._create_stdlib_context
 
-mean=[0.485, 0.456, 0.406]
-std=[0.229, 0.224, 0.225]
-normalize = transforms.Normalize(mean=mean, std=std)
-inv_normalize = transforms.Normalize(
-    mean=[-m/s for m, s in zip(mean, std)],
-    std=[1/s for s in std]
-)
+# mean=[0.485, 0.456, 0.406]
+# std=[0.229, 0.224, 0.225]
+# normalize = transforms.Normalize(mean=mean, std=std)
+# inv_normalize = transforms.Normalize(
+#     mean=[-m/s for m, s in zip(mean, std)],
+#     std=[1/s for s in std]
+# )
 
 
 def select_data(any_set, start, end):
@@ -66,17 +66,10 @@ def get_real_data(args):
         test_exist = True
 
     def get_transform(img_size):
-        if args.do_norm:
-            transform = transforms.Compose([
-                transforms.Resize((img_size, img_size)),
-                transforms.ToTensor(), 
-                normalize
-            ])
-        else:
-            transform = transforms.Compose([
-                transforms.Resize((img_size, img_size)),
-                transforms.ToTensor()
-            ])
+        transform = transforms.Compose([
+            transforms.Resize((img_size, img_size)),
+            transforms.ToTensor()
+        ])
         return transform
 
     if not real_exist or not test_exist:
@@ -539,17 +532,10 @@ def preprocess_image(args, image_path):
     img = Image.open(image_path)
 
     # Resize image
-    if args.do_norm:
-        transform = transforms.Compose([
-            transforms.Resize((args.img_size, args.img_size)),
-            transforms.ToTensor(),
-            normalize
-        ])
-    else:
-        transform = transforms.Compose([
-            transforms.Resize((args.img_size, args.img_size)),
-            transforms.ToTensor()
-        ])
+    transform = transforms.Compose([
+        transforms.Resize((args.img_size, args.img_size)),
+        transforms.ToTensor()
+    ])
 
     # Apply transformations
     img_tensor = transform(img)

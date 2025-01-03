@@ -5,10 +5,9 @@ import numpy as np
 import torch
 import ujson
 from algo.server.Filter import Server as Filter
-from utils.dataset import inv_normalize
 from collections import defaultdict
-from utils.dataset import preprocess_image 
 from utils.generator import get_generator 
+from PIL import Image
 
 
 class Server(Filter):
@@ -47,16 +46,9 @@ class Server(Filter):
             sampled_idx = np.random.choice(len(imgs_prob), 1, p=imgs_prob)[0].item()
             offset = self.previous_volume_per_label[label_id]
             file_name = f'[{label_name}]-{offset + sampled_idx}.jpg'
-            if self.args.online_api:
-                with open(os.path.join(previous_dir, 'image_urls.json'), 'r') as f:
-                    image_urls_dict = ujson.load(f)
-                return image_urls_dict[file_name]
-            else:
-                file_path = os.path.join(previous_dir, file_name)
-                random_img = preprocess_image(self.args, file_path)
-                if self.args.do_norm:
-                    random_img = inv_normalize(random_img)
-                return random_img
+            file_path = os.path.join(previous_dir, file_name)
+            random_img = Image.open(file_path)
+            return random_img
         else:
             return None
         
