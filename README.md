@@ -1,11 +1,10 @@
 # CoAutoGen: Cloud-Edge Collaboration Platform for Automated Synthetic Dataset Generation
 
-*CoAutoGen automatically creates high-quality synthetic datasets by **leveraging edge-side privacy-protected data to rate and filter** cloud-generated datasets through a **feedback loop** with offline or online **APIs**.*
+🎯 *CoAutoGen automatically creates high-quality synthetic datasets by **leveraging edge-side privacy-protected data to rate and filter** cloud-generated datasets through a **feedback loop** with offline or online **APIs**.*
 
-You can access **free online APIs** for text, image, video, audio, and more at [SiliconFlow](https://cloud.siliconflow.cn/models) or explore affordable options at [getimg.ai](https://dashboard.getimg.ai/models).
+👏 You can access **free online APIs** for text, image, video, audio, and more at [SiliconFlow](https://cloud.siliconflow.cn/models) or explore affordable options at [getimg.ai](https://dashboard.getimg.ai/models).
 
 ![Running Out of Data](https://media.nature.com/lw767/magazine-assets/d41586-024-03990-2/d41586-024-03990-2_50306276.jpg?as=webp)
-
 
 AI's growth has relied on scaling neural networks and training on massive datasets, enabling LLMs like ChatGPT to handle conversations and reasoning (see [this nature paper](https://www.nature.com/articles/d41586-023-00641-w)). However, experts warn of limits as energy demands rise and training data dwindles (see [this nature paper](https://www.nature.com/articles/d41586-024-03408-z)). Epoch AI predicts AI training data will be exhausted by 2028 (see [this nature paper](https://www.nature.com/articles/d41586-024-01760-8)).
 
