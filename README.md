@@ -1,6 +1,6 @@
 # CoAutoGen: Cloud-Edge Collaboration Platform for Automated Synthetic Dataset Generation
 
-*CoAutoGen tackles dwindling training data by integrating dataset generation methods with cloud-edge collaboration, enabling **automatic scoring and evolution** in synthetic dataset creation via a **feedback loop** using refined prompts, privacy-protected data, and **offline or online APIs**.*
+*CoAutoGen automatically creates high-quality synthetic datasets by **leveraging edge-side privacy-protected data to rate and filter** cloud-generated datasets through a **feedback loop** with offline or online **APIs**.*
 
 You can access **free online APIs** for text, image, video, audio, and more at [SiliconFlow](https://cloud.siliconflow.cn/models) or explore affordable options at [getimg.ai](https://dashboard.getimg.ai/models).
 
