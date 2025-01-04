@@ -2,7 +2,7 @@
 
 *CoAutoGen tackles dwindling training data by integrating dataset generation methods with cloud-edge collaboration, enabling **automatic scoring and evolution** in synthetic dataset creation via a **feedback loop** using refined prompts, privacy-protected data, and **offline or online APIs**.*
 
-*You can access **free online APIs** for text, image, video, audio, and more at [SiliconFlow](https://cloud.siliconflow.cn/models) or explore affordable options at [getimg.ai](https://dashboard.getimg.ai/models).*
+You can access **free online APIs** for text, image, video, audio, and more at [SiliconFlow](https://cloud.siliconflow.cn/models) or explore affordable options at [getimg.ai](https://dashboard.getimg.ai/models).
 
 ![Running Out of Data](https://media.nature.com/lw767/magazine-assets/d41586-024-03990-2/d41586-024-03990-2_50306276.jpg?as=webp)
 
