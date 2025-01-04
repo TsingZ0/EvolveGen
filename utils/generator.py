@@ -261,13 +261,13 @@ class Image2ImageWrapper(torch.nn.Module):
                     )
 
                 if self.args.server_generator in ['StableDiffusionXL', 'FLUX']:
-                    return res.images
+                    return res.images, []
                 else:
                     generated_images = []
                     for idx, nsfw in enumerate(res.nsfw_content_detected):
                         if not nsfw:
                             generated_images.append(res.images[idx])
-                    return generated_images
+                    return generated_images, []
 
 
 def get_generator(args):
