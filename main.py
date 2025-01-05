@@ -165,12 +165,12 @@ if __name__ == "__main__":
                         ])
     # I2I
     parser.add_argument('-is', "--i2i_strength", type=float, default=0.8, 
-                        help="[0,1]")
+                        help="[0,1]. More noise is added the higher the strength.")
     parser.add_argument('-isa', "--i2i_strength_anneal", type=float, default=0.02)
     parser.add_argument('-isth', "--i2i_strength_threshold", type=float, default=0.6)
     parser.add_argument('-uipa', "--use_IPAdapter", type=bool, default=False)
     parser.add_argument('-ipas', "--IPAdapter_scale", type=float, default=0.2, 
-                        help="[0,1]")
+                        help="[0,1]. A value of 1.0 means the model is only conditioned on the image prompt, and 0.0 only conditioned by the text prompt.")
     # RF
     parser.add_argument('-dth', "--dist_threshold", type=float, default=0.0)
     # PE
