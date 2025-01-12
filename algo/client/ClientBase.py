@@ -94,7 +94,7 @@ class ClientBase(object):
                 if batch_size is None:
                     batch_size = self.args.client_batch_size
                 return DataLoader(train_dataset, batch_size, drop_last=False, shuffle=is_shuffle)
-        except FileNotFoundError:
+        except (FileNotFoundError, ValueError):
             return None
         
     def eval_metrics(self):
