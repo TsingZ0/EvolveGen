@@ -335,6 +335,10 @@ class ClientBase(object):
 
     def train(self):
         train_loader = self.load_train_dataset()
+        if train_loader is None:
+            print('No train dataset exists anymore.')
+            self.done = True
+            return
 
         if self.args.client_retrain:
             self.model = get_model(self.args)
