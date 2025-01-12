@@ -25,12 +25,12 @@ class Server(ServerBase):
             start = time.time()
             print(f"\n-------------Iter. number: {i}-------------")
 
+            self.receive()
+            if self.done:
+                break
             if not self.args.use_generated:
-                self.receive()
-                if self.done:
-                    break
                 self.generate()
-                self.send()
+            self.send()
             self.client.run()
 
             if i % self.args.eval_gap == 0:

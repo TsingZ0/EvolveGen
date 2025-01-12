@@ -18,7 +18,9 @@ class InceptionWrapper(nn.Module):
 
     def forward(self, x):
         x = self.resize(x)
-        out = self.model(x).logits
+        out = self.model(x)
+        if self.model.training:
+            return out.logits
         return out
 
 

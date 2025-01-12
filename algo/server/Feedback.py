@@ -29,7 +29,7 @@ class Server(Filter):
             with open(os.path.join(previous_dir, 'ref_imgs_prob.json'), 'w') as f:
                 ujson.dump(self.ref_imgs_prob, f)
             
-            if self.it == 1:
+            if not self.args.use_generated and self.it == 1:
                 print('\nReload I2I generator...')
                 del self.Gen
                 torch.cuda.empty_cache()

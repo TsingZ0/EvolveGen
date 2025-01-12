@@ -141,10 +141,10 @@ class ServerBase(object):
         start = time.time()
         print(f"\n-------------Iter. number: {0}-------------")
 
+        self.receive()
         if not self.args.use_generated:
-            self.receive()
             self.generate()
-            self.send()
+        self.send()
         self.client.run()
         self.eval()
 
