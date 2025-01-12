@@ -104,6 +104,12 @@ class Client(ClientBase):
             self.ref_imgs_prob[label_id] = imps_new
 
     def run(self):
+        train_loader = self.load_train_dataset()
+        if train_loader is None:
+            print('No train dataset exists anymore.')
+            self.done = True
+            return
+        
         filtered_dataset_dir = os.path.join(self.args.dataset_dir, 'train', self.args.task)
         if self.args.client_accumulate_filter:
             try:
