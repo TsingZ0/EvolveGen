@@ -45,7 +45,7 @@ AI's growth has relied on scaling neural networks and training on massive datase
 ## Example
 
 For a COVID-19 pneumonia detection task, generate 100 synthetic images per class based on 10 real and **private chest radiography (X-ray) images** on the edge using the Stable Diffusion API. The edge device utilizes a ResNet-18, with Private Evolution (PE) for rating and feedback provided with privacy protection:
-```bash  
+```bash
 python -u main.py \
   -tt syn \       # Task Type: Only using the synthetic dataset for downstream task
   -tm I2I \       # Task Mode: Image to Image
@@ -63,4 +63,4 @@ python -u main.py \
   -cef 1 \        # Other hyperparameter
   -cdata COVIDx \ # Pravate dataset
   -r PE           # Rater: Private Evolution
-```  
+```
