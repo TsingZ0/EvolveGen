@@ -51,7 +51,7 @@ python -u main.py \
   -tm I2I \       # Task Mode: Image to Image
   -f Feedback \   # Framework: Feedback mechanism
   -did 1 \        # GPU device ID
-  -eps 0.2 \      # Privacy budget epsilon per iteration
+  -eps 0.2 \      # Privacy cost per iteration
   -rvpl 1 \       # Real and private volume per label
   -vpl 2 \        # Generated volume per label
   -oa 1 \         # Use online API

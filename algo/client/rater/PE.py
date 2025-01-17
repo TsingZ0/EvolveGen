@@ -11,7 +11,7 @@ class Client(Rater):
         self.sensitivity = 1
         self.delta = 1 / (self.args.real_volume_per_label * self.args.num_labels)
         self.sigma = self.sensitivity * np.sqrt(2 * np.log(
-            1.25 / self.delta)) / self.args.epsilon
+            1.25 / self.delta)) / self.args.epsilon_per_iter
 
 
     @torch.no_grad()
