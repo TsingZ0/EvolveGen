@@ -36,7 +36,7 @@ class Client(Rater):
                 train_vecs[yc].append(vec.detach().data)
 
         # get histogram
-        for vecs in self.real_vecs:
+        for yc, vecs in enumerate(self.real_vecs):
             for vec in vecs:
                 self.update_histogram(yc, histogram, vec, train_vecs)
         
