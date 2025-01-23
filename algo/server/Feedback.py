@@ -23,7 +23,7 @@ class Server(Filter):
         assert self.args.task_mode == 'I2I'
         if self.it > 0:
             self.ref_imgs_prob = defaultdict(list)
-            previous_dir = os.path.join(self.train_dataset_dir, f'{self.it-1}')
+            previous_dir = os.path.join(self.generated_dataset_dir, f'{self.it-1}')
             self.previous_volume_per_label = copy.deepcopy(self.current_volume_per_label)
             self.current_volume_per_label, self.done, self.ref_imgs_prob = self.client.send('rated')
             with open(os.path.join(previous_dir, 'ref_imgs_prob.json'), 'w') as f:
