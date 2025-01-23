@@ -28,9 +28,9 @@ class ServerBase(object):
             self.negative_prompt = negative_prompt
             self.Gen = get_generator(args)
             
-            self.generated_dataset_dir = os.path.join(self.args.dataset_dir, 'generated', self.args.task)
-            if not os.path.exists(self.generated_dataset_dir):
-                os.makedirs(self.generated_dataset_dir)
+        self.generated_dataset_dir = os.path.join(self.args.dataset_dir, 'generated', self.args.task)
+        if not os.path.exists(self.generated_dataset_dir):
+            os.makedirs(self.generated_dataset_dir)
             
         self.train_dataset_dir = os.path.join(self.args.dataset_dir, 'train', self.args.task)
         if not os.path.exists(self.train_dataset_dir):
@@ -51,7 +51,8 @@ class ServerBase(object):
             dataset.append((img_tensor.to(self.args.device), label_id.to(self.args.device)))
         print('\nGenerated volume per label: {:.4f}'.format(len(dataset) / self.args.num_labels))
         current_dir = os.path.join(self.train_dataset_dir, f'{self.it}')
-        os.makedirs(current_dir)
+        if not os.path.exists(current_dir):
+            os.makedirs(current_dir)
         torch.save(dataset, os.path.join(current_dir, 'dataset.pt'))
         self.client.receive()
 
@@ -70,7 +71,8 @@ class ServerBase(object):
 
     def generate(self):
         current_dir = os.path.join(self.generated_dataset_dir, f'{self.it}')
-        os.makedirs(current_dir)
+        if not os.path.exists(current_dir):
+            os.makedirs(current_dir)
         image_urls_dict = {}
         for i, label_name in enumerate(self.args.label_names):
             offset = self.current_volume_per_label[i]
