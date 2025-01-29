@@ -1,6 +1,6 @@
 # CoAutoGen: Cloud-Edge Collaboration Platform for Automated Synthetic Dataset Generation
 
-🎯 *CoAutoGen automatically creates high-quality synthetic datasets by **leveraging edge-side privacy-protected data to rate and filter** cloud-generated datasets through a **feedback loop** with offline or online **APIs**.*
+🎯 *CoAutoGen automatically creates high-quality synthetic datasets by **leveraging edge-side privacy-protected data to select and filter** cloud-generated datasets through a **feedback loop** with offline or online **APIs**.*
 
 👏 You can access **free online APIs** for text, image, video, audio, and more at [SiliconFlow](https://cloud.siliconflow.cn/models) or explore affordable options at [getimg.ai](https://dashboard.getimg.ai/models).
 
@@ -12,7 +12,7 @@ AI's growth has relied on scaling neural networks and training on massive datase
 
 - Enabling self-correction in synthetic dataset creation through feedback with refined prompts or privacy-protected data.
 - Intuitive, user-friendly code style.  
-- Customizable rater design for synthetic data rating, selection, and filtering.  
+- Customizable selector design for synthetic data quality evaluation, selection, and filtering.  
 - Automate synthetic dataset generation with large generative model APIs across various modalities.  
 - Automatically filter and iteratively refine high-quality synthetic datasets.  
 - Flexible interfaces for seamless extension and customization.  
@@ -37,21 +37,21 @@ AI's growth has relied on scaling neural networks and training on massive datase
      - Generate with prompts: `--framework Gen`  
      - Generate with LLM-enhanced prompts: `--framework GenLLM`  
      - Iteratively generate, filter, and accumulate: `--framework Filter`  
-     - Iteratively generate, rate, and provide feedback with privacy protection: `--framework Feedback`  
-   - **Available Raters (when `--framework Filter or Feedback`):**  
-     - Histogram rating in [Private Evolution (PE, ICLR'24)](https://openreview.net/forum?id=YEhQs8POIo): `--rater PE`  
-     - Real data rating in [Real Filter (RF, ICLR'23)](https://openreview.net/forum?id=nUmCcZ5RKF): `--rater RF`  
+     - Iteratively generate, select, and provide feedback with privacy protection: `--framework Feedback`  
+   - **Available Selectors (when `--framework Filter or Feedback`):**  
+     - Similarity voting in [Private Evolution (PE, ICLR'24)](https://openreview.net/forum?id=YEhQs8POIo): `--selector PE`
+     - Filtering with real data in [Real Filter (RF, ICLR'23)](https://openreview.net/forum?id=nUmCcZ5RKF): `--selector RF`
 
 ## Example
 
-For a COVID-19 pneumonia detection task, generate 100 synthetic images per class based on 10 real and **private chest radiography (X-ray) images** on the edge using the Stable Diffusion API. The edge device utilizes a ResNet-18, with Private Evolution (PE) for rating and feedback provided with privacy protection:
-```bash
+For a COVID-19 pneumonia detection task, generate 100 synthetic images per class based on 10 real and **private chest radiography (X-ray) images** on the edge using the Stable Diffusion API. The edge device utilizes a ResNet-18, with Private Evolution (PE) for selection and feedback provided with privacy protection:
+```bash  
 python -u main.py \
   -tt syn \       # Task Type: Only using the synthetic dataset for downstream task
   -tm I2I \       # Task Mode: Image to Image
   -f Feedback \   # Framework: Feedback mechanism
   -did 1 \        # GPU device ID
-  -eps 0.2 \      # Privacy cost per iteration
+  -eps 0.2 \      # Privacy cost epsilon per iteration
   -rvpl 1 \       # Real and private volume per label
   -vpl 2 \        # Generated volume per label
   -oa 1 \         # Use online API
@@ -61,6 +61,6 @@ python -u main.py \
   -cmodel ResNet18 \ # Edge client model
   -cmp 1 \        # Other hyperparameter
   -cef 1 \        # Other hyperparameter
-  -cdata COVIDx \ # Pravate dataset
-  -r PE           # Rater: Private Evolution
-```
+  -cdata COVIDx \ # Private dataset
+  -s PE           # Selector: Private Evolution
+```  

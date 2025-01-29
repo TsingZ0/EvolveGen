@@ -30,7 +30,7 @@ def run(args):
         args.task = os.path.join(
             args.task_mode, 
             args.server_generator, 
-            args.rater, 
+            args.selector, 
             args.client_dataset, 
             timestamp, 
             str(i)
@@ -125,12 +125,7 @@ if __name__ == "__main__":
                             "Filter", 
                             "Feedback"
                         ])
-    parser.add_argument('-r', "--rater", type=str, default="Other", 
-                        choices=[
-                            "PE", 
-                            "RF", 
-                            "Other"
-                        ])
+    parser.add_argument('-s', "--selector", type=str, default="Other")
     parser.add_argument('-cdata', "--client_dataset", type=str, default="EuroSAT")
     parser.add_argument('-cmodel', "--client_model", type=str, default="ResNet18", 
                         help="CLIP, InceptionV3, ViTs, ResNets")
@@ -147,6 +142,14 @@ if __name__ == "__main__":
     parser.add_argument('-caf', "--client_accumulate_filter", type=bool, default=False)
     parser.add_argument('-cst', "--client_send_topk", type=bool, default=False)
     parser.add_argument('-ctpl', "--client_topk_per_label", type=int, default=10000)
+    # I2I
+    parser.add_argument('-is', "--i2i_strength", type=float, default=0.8, 
+                        help="[0,1]")
+    parser.add_argument('-isa', "--i2i_strength_anneal", type=float, default=0.02)
+    parser.add_argument('-isth', "--i2i_strength_threshold", type=float, default=0.6)
+    parser.add_argument('-uipa', "--use_IPAdapter", type=bool, default=False)
+    parser.add_argument('-ipas', "--IPAdapter_scale", type=float, default=0.2, 
+                        help="[0,1]")
     # GenLLM
     parser.add_argument('-sllm', "--server_llm", type=str, default="", 
                         choices=[
@@ -163,14 +166,6 @@ if __name__ == "__main__":
                             "BlipLarge", 
                             "LLaVA"
                         ])
-    # I2I
-    parser.add_argument('-is', "--i2i_strength", type=float, default=0.8, 
-                        help="[0,1]. More noise is added the higher the strength.")
-    parser.add_argument('-isa', "--i2i_strength_anneal", type=float, default=0.02)
-    parser.add_argument('-isth', "--i2i_strength_threshold", type=float, default=0.6)
-    parser.add_argument('-uipa', "--use_IPAdapter", type=bool, default=False)
-    parser.add_argument('-ipas', "--IPAdapter_scale", type=float, default=0.5, 
-                        help="[0,1]. A value of 1.0 means the model is only conditioned on the image prompt, and 0.0 only conditioned by the text prompt.")
     # RF
     parser.add_argument('-dth', "--dist_threshold", type=float, default=0.0)
     # PE

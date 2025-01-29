@@ -1,14 +1,14 @@
 import time
 from algo.server.ServerBase import ServerBase
-from algo.client.rater.RF import Client as RF
-from algo.client.rater.PE import Client as PE
+from algo.client.selector.RF import Client as RF
+from algo.client.selector.PE import Client as PE
 
 
 class Server(ServerBase):
     def __init__(self, args):
-        if args.rater == 'RF':
+        if args.selector == 'RF':
             args.Client = RF
-        elif args.rater == 'PE':
+        elif args.selector == 'PE':
             args.Client = PE
         else:
             raise NotImplementedError
