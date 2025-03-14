@@ -11,11 +11,11 @@ AI's growth has relied on scaling neural networks and training on massive datase
 ## Features  
 
 - Enabling self-correction in synthetic dataset creation through feedback with refined prompts or privacy-protected data.
-- Intuitive, user-friendly code style.  
+- User-friendly code style. 
 - Customizable selector design for synthetic data quality evaluation, selection, and filtering.  
 - Automate synthetic dataset generation with large generative model APIs across various modalities.  
 - Automatically filter and iteratively refine high-quality synthetic datasets.  
-- Flexible interfaces for seamless extension and customization.  
+- Flexible interfaces for seamless extension and customization. 
 
 ## How to Use  
 
