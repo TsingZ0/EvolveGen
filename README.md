@@ -1,8 +1,9 @@
 # CoAutoGen: Cloud-Edge Collaboration Platform for Automated Synthetic Dataset Generation
 
-🎯 *CoAutoGen automatically creates high-quality synthetic datasets by **leveraging edge-side privacy-protected data to select and filter** cloud-generated datasets through a **feedback loop** with offline or online **APIs**.*
+🎯 *CoAutoGen automatically creates high-quality synthetic datasets by **leveraging edge-side privacy-protected data to select and filter** cloud-generated synthetic datasets through a **feedback loop** with offline or online **APIs**.*
 
 👏 You can access **free online APIs** for text, image, video, audio, and more at [SiliconFlow](https://cloud.siliconflow.cn/models) or explore affordable options at [getimg.ai](https://dashboard.getimg.ai/models).
+👏 You can implement a custom synthetic data selector by simply adding a new file to the `algo\client\selector` directory.
 
 ![Running Out of Data](https://media.nature.com/lw767/magazine-assets/d41586-024-03990-2/d41586-024-03990-2_50306276.jpg?as=webp)
 
@@ -38,7 +39,7 @@ AI's growth has relied on scaling neural networks and training on massive datase
      - Generate with LLM-enhanced prompts: `--framework GenLLM`  
      - Iteratively generate, filter, and accumulate: `--framework Filter`  
      - Iteratively generate, select, and provide feedback with privacy protection: `--framework Feedback`  
-   - **Available Selectors (when `--framework Filter or Feedback`):**  
+   - **Available Data Selectors (when `--framework Filter or Feedback`):**  
      - Similarity voting in [Private Evolution (PE, ICLR'24)](https://openreview.net/forum?id=YEhQs8POIo): `--selector PE`
      - Filtering with real data in [Real Filter (RF, ICLR'23)](https://openreview.net/forum?id=nUmCcZ5RKF): `--selector RF`
 
