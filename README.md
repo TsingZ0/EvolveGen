@@ -62,5 +62,5 @@ python -u main.py \
   -cmp 1 \         # Other hyperparameter
   -cef 1 \         # Other hyperparameter
   -cdata COVIDx \  # Private dataset
-  -s PE            # Selector: Private Evolution
+  -s PE            # Synthetic data selector: Private Evolution
 ```  
