@@ -32,16 +32,17 @@ AI's growth has relied on scaling neural networks and training on massive datase
      # You may need to downgrade PyTorch using pip to match the CUDA version  
      ```  
 
-3. **Run the Script**  
+3. **Run the Script**
    - Execute `python main.py` with your configurations.  
-   - **Available Frameworks:**  
+   - **Available Frameworks:**
      - Generate with prompts: `--framework Gen`  
      - Generate with LLM-enhanced prompts: `--framework GenLLM`  
      - Iteratively generate, filter, and accumulate: `--framework Filter`  
      - Iteratively generate, select, and provide feedback with privacy protection: `--framework Feedback`  
-   - **Available Data Selectors (when `--framework Filter or Feedback`):**  
+   - **Available Data Selectors (when `--framework Filter or Feedback`):**
+     - Contrastive filter in [Private Contrastive Evolution (PCE, ICML'25)](): `--selector PCE`
      - Similarity voting in [Private Evolution (PE, ICLR'24)](https://openreview.net/forum?id=YEhQs8POIo): `--selector PE`
-     - Filtering with real data in [Real Filter (RF, ICLR'23)](https://openreview.net/forum?id=nUmCcZ5RKF): `--selector RF`
+     - Filtering using real data in [Real Filter (RF, ICLR'23)](https://openreview.net/forum?id=nUmCcZ5RKF): `--selector RF`
 
 ## Example
 

@@ -170,6 +170,9 @@ if __name__ == "__main__":
     parser.add_argument('-dth', "--dist_threshold", type=float, default=0.0)
     # PE
     parser.add_argument('-hth', "--histogram_threshold", type=int, default=0)
+    # PCE
+    parser.add_argument('-tau', "--tau", type=float, default=10.0, 
+                        help="Similarity calibrating factor.")
 
     args = parser.parse_args()
     os.environ["CUDA_VISIBLE_DEVICES"] = args.device_id
