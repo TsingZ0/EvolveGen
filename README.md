@@ -40,7 +40,7 @@ AI's growth has relied on scaling neural networks and training on massive datase
      - Iteratively generate, filter, and accumulate: `--framework Filter`  
      - Iteratively generate, select, and provide feedback with privacy protection: `--framework Feedback`  
    - **Available Data Selectors (when `--framework Filter or Feedback`):**
-     - Contrastive filter in [Private Contrastive Evolution (PCE, ICML'25)](): `--selector PCE`
+     - Contrastive filter in [Private Contrastive Evolution (PCEvolve, ICML'25)](): `--selector PCEvolve`
      - Similarity voting in [Private Evolution (PE, ICLR'24)](https://openreview.net/forum?id=YEhQs8POIo): `--selector PE`
      - Filtering using real data in [Real Filter (RF, ICLR'23)](https://openreview.net/forum?id=nUmCcZ5RKF): `--selector RF`
 
