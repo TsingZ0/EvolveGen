@@ -1,6 +1,6 @@
-# CoAutoGen: Cloud-Edge Collaboration Platform for Automated Synthetic Dataset Generation
+# EvolveGen: Evolutional Data Generation Platform
 
-🎯 *CoAutoGen automatically creates high-quality synthetic datasets by **leveraging edge-side privacy-protected data to select and filter** cloud-generated synthetic datasets through a **feedback loop** with offline or online **APIs**.*
+🎯 *EvolveGen automatically creates high-quality synthetic datasets by **leveraging edge-side privacy-protected data to select and filter** cloud-generated synthetic datasets through a **evolutional loop** with offline or online **APIs**.*
 
 👏 You can access **free online APIs** for text, image, video, audio, and more at [SiliconFlow](https://cloud.siliconflow.cn/models) or explore affordable options at [getimg.ai](https://dashboard.getimg.ai/models).
 👏 You can implement a custom synthetic data selector by simply adding a new file to the `algo\client\selector` directory.
@@ -11,7 +11,7 @@ AI's growth has relied on scaling neural networks and training on massive datase
 
 ## Features  
 
-- Enabling self-correction in synthetic dataset creation through feedback with refined prompts or privacy-protected data.
+- Enabling self-correction in synthetic dataset generation through evolution with refined prompts or privacy-protected data.
 - User-friendly code style. 
 - Customizable selector design for synthetic data quality evaluation, selection, and filtering.  
 - Automate synthetic dataset generation with large generative model APIs across various modalities.  
@@ -51,7 +51,7 @@ For a COVID-19 pneumonia detection task, generate 100 synthetic images per class
 python -u main.py \
   -tt syn \        # Task Type: Only using the synthetic dataset for downstream task
   -tm I2I \        # Task Mode: Image to Image
-  -f Feedback \    # Framework: Feedback mechanism
+  -f Feedback \    # Framework: Using the feedback mechanism
   -did 1 \         # GPU device ID
   -eps 0.2 \       # Privacy cost epsilon per iteration
   -rvpl 1 \        # Real and private volume per label
